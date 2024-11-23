@@ -1,8 +1,8 @@
 <h1>Programs</h1>
-{% if programs %}
+{% if programs_list %}
     <ul>
         {% for program in programs_list %}
-            <li><a href="{% url 'programs:detail' program.id %}">{{ program.name }}</a></li>
+            <li><a href="{% url 'programs:detail' program.id %}">{{ program.program_name }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
