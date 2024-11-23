@@ -5,7 +5,7 @@ from exercises.models import Exercise
 
 
 class IndexView(generic.ListView):
-    template_name = "index.html"
+    template_name = "exercises/index.html"
     context_object_name = "exercises_list"
 
     def get_queryset(self):
@@ -16,4 +16,4 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Exercise
-    template_name = "detail.html"
+    template_name = "exercises/detail.html"
