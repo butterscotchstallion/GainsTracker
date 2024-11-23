@@ -5,7 +5,7 @@ from programs.models import Program
 
 
 class IndexView(generic.ListView):
-    template_name = "index.html"
+    template_name = "programs/index.html"
     context_object_name = "programs_list"
 
     def get_queryset(self):
@@ -16,4 +16,4 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Program
-    template_name = "detail.html"
+    template_name = "programs/detail.html"
