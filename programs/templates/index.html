@@ -1,1 +1,10 @@
-program list
+<h1>Programs</h1>
+{% if programs %}
+    <ul>
+        {% for program in programs_list %}
+            <li><a href="{% url 'programs:detail' program.id %}">{{ program.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No programs are available.</p>
+{% endif %}
