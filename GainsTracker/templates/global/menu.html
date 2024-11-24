@@ -1,0 +1,8 @@
+<ul>
+    <li class="{% if active_tab == 'Exercises' %}active{% endif %}">
+        <a href="{% url 'exercises:index' %}">Exercises</a>
+    </li>
+    <li class="{% if active_tab == 'Programs' %}active{% endif %}">
+        <a href="{% url 'programs:index' %}">Programs</a>
+    </li>
+</ul>

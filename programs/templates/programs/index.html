@@ -1,4 +1,6 @@
 <h1>Programs</h1>
+{% include "global/menu.html" with active_tab='Programs' %}
+
 {% if programs_list %}
     <ul>
         {% for program in programs_list %}
@@ -6,5 +8,5 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>No programs are available.</p>
+    <p>No programs found.</p>
 {% endif %}
