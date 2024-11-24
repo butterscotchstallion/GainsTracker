@@ -2,7 +2,7 @@
 {% if exercises_list %}
     <ul>
         {% for exercise in exercises_list %}
-            <li><a href="{% url 'exercise:detail' exercise.id %}">{{ exercise.exercise_name }}</a></li>
+            <li><a href="{% url 'exercises:detail' exercise.id %}">{{ exercise.exercise_name }}</a></li>
         {% endfor %}
     </ul>
 {% else %}

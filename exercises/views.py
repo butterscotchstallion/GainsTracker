@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.views import generic
 
 from exercises.models import Exercise
@@ -9,9 +8,7 @@ class IndexView(generic.ListView):
     context_object_name = "exercises_list"
 
     def get_queryset(self):
-        return Exercise.objects.filter(pub_date__lte=timezone.now()).order_by(
-            "-pub_date"
-        )
+        return Exercise.objects.all()
 
 
 class DetailView(generic.DetailView):
