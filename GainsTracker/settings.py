@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "api.apps.ApiConfig",
     "programs.apps.ProgramsConfig",
     "exercises.apps.ExercisesConfig",
     "django.contrib.admin",
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
