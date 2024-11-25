@@ -3,6 +3,7 @@ from django.urls import include, path
 from rest_framework import routers, serializers, viewsets
 from rest_framework.response import Response
 
+from exercises.models import Exercise
 from programs.models import Program
 
 
@@ -19,7 +20,25 @@ class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
 
     def get(self, request: WSGIRequest) -> Response:
+        return Response(self.serializer_class.data)
 
+    def post(self):
+        pass
+
+
+# Serializers define the API representation.
+class ExerciseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Exercise
+        fields = ["exercise_name"]
+
+
+# ViewSets define the view behavior.
+class ExerciseViewSet(viewsets.ModelViewSet):
+    queryset = Exercise.objects.all()
+    serializer_class = ExerciseSerializer
+
+    def get(self, request: WSGIRequest) -> Response:
         return Response(self.serializer_class.data)
 
     def post(self):
@@ -28,6 +47,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
 
 router = routers.DefaultRouter()
 router.register(r"programs", ProgramViewSet)
+router.register(r"exercises", ExerciseViewSet)
 
 urlpatterns = [
     # path("programs/", program_list, name="program_list"),
