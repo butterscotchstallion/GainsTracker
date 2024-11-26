@@ -22,9 +22,6 @@ class ProgramViewSet(viewsets.ModelViewSet):
     def get(self, request: WSGIRequest) -> Response:
         return Response(self.serializer_class.data)
 
-    def post(self):
-        pass
-
 
 # Serializers define the API representation.
 class ExerciseSerializer(serializers.HyperlinkedModelSerializer):
@@ -40,9 +37,6 @@ class ExerciseViewSet(viewsets.ModelViewSet):
 
     def get(self, request: WSGIRequest) -> Response:
         return Response(self.serializer_class.data)
-
-    def post(self):
-        pass
 
 
 router = routers.DefaultRouter()
