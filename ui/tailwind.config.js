@@ -42,6 +42,7 @@ export default {
                 darkText: '#eeefe9',
                 darkBorder: '#000',
                 secondaryBlack: '#212121', // opposite of plain white, not used pitch black because borders and box-shadows are that color
+                headerBg: "#333333",
             },
             borderRadius: {
                 base: '5px'
