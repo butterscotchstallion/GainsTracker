@@ -1,5 +1,6 @@
 import './App.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faDumbbell, faRectangleList} from "@fortawesome/free-solid-svg-icons";
 
 function App() {
     return (
@@ -18,14 +19,18 @@ function App() {
                 <menu className="w-40 bg-slate-500 border-solid border-black border-2">
                     <div className="grid grid-cols-1 divide-y">
                         <div className="p-3">
-                            <a href="/sessions" title="Sessions">
-                                <FontAwesomeIcon icon={["fas", "memo-circle-check"]}/> Sessions
+                            <a className="block" href="/sessions" title="Sessions">
+                                <FontAwesomeIcon icon={faDumbbell}/> Sessions
                             </a>
                         </div>
-                        <div className="p-3"><a href="/sessions" title="Sessions">Programs</a></div>
-                        <div className="p-3"><a href="/test" title="Test">Lorem</a></div>
-                        <div className="p-3"><a href="/test" title="Test">Ipsum Doler</a></div>
-                        <div className="p-3"><a href="/test" title="Test">Amit A Sandwich</a></div>
+                        <div className="p-3">
+                            <a className="block" href="/sessions" title="Programs">
+                                <FontAwesomeIcon icon={faRectangleList}/> Programs
+                            </a>
+                        </div>
+                        <div className="p-3"><a className="block" href="/test" title="Test">Lorem</a></div>
+                        <div className="p-3"><a className="block" href="/test" title="Test">Ipsum Doler</a></div>
+                        <div className="p-3"><a className="block" href="/test" title="Test">Amit A Sandwich</a></div>
                     </div>
                 </menu>
             </main>
