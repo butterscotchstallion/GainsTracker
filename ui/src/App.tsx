@@ -1,6 +1,12 @@
 import './App.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faDumbbell, faRectangleList} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCalendarDays,
+    faDumbbell,
+    faGhost,
+    faRectangleList,
+    faWandMagicSparkles
+} from "@fortawesome/free-solid-svg-icons";
 
 function App() {
     return (
@@ -16,23 +22,38 @@ function App() {
                 </header>
             </div>
             <main className="p-2 bg-slate-300 w-full h-screen">
-                <menu className="w-40 bg-slate-500 border-solid border-black border-2">
-                    <div className="grid grid-cols-1 divide-y">
-                        <div className="p-3">
-                            <a className="block" href="/sessions" title="Sessions">
-                                <FontAwesomeIcon icon={faDumbbell}/> Sessions
-                            </a>
+                <div className="grid grid-flow-col auto-cols-max">
+                    <menu className="bg-slate-500 border-solid border-black border-2">
+                        <div className="grid grid-cols-1 divide-y">
+                            <div className="p-3">
+                                <a className="block" href="/sessions" title="Sessions">
+                                    <FontAwesomeIcon icon={faDumbbell}/> Sessions
+                                </a>
+                            </div>
+                            <div className="p-3">
+                                <a className="block" href="/sessions" title="Programs">
+                                    <FontAwesomeIcon icon={faRectangleList}/> Programs
+                                </a>
+                            </div>
+                            <div className="p-3">
+                                <a className="block" href="/test" title="Test">
+                                    <FontAwesomeIcon icon={faWandMagicSparkles}/> Lorem</a>
+                            </div>
+                            <div className="p-3">
+                                <a className="block" href="/test" title="Test">
+                                    <FontAwesomeIcon icon={faCalendarDays}/> Ipsum Doler</a>
+                            </div>
+                            <div className="p-3">
+                                <a className="block" href="/test" title="Test">
+                                    <FontAwesomeIcon icon={faGhost}/> Amit A Sandwich
+                                </a>
+                            </div>
                         </div>
-                        <div className="p-3">
-                            <a className="block" href="/sessions" title="Programs">
-                                <FontAwesomeIcon icon={faRectangleList}/> Programs
-                            </a>
-                        </div>
-                        <div className="p-3"><a className="block" href="/test" title="Test">Lorem</a></div>
-                        <div className="p-3"><a className="block" href="/test" title="Test">Ipsum Doler</a></div>
-                        <div className="p-3"><a className="block" href="/test" title="Test">Amit A Sandwich</a></div>
+                    </menu>
+                    <div className="pl-2 pr-2 pb-2">
+                        Hello I am the content.
                     </div>
-                </menu>
+                </div>
             </main>
         </>
     )
