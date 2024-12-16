@@ -70,6 +70,15 @@ wheels = [
 ]
 
 [[package]]
+name = "django-cors-middleware"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/b9/1dea04e58f3e0b0d3c14499c27527464ef1e4e5e4e164c621927226f5ef5/django-cors-middleware-1.5.0.tar.gz", hash = "sha256:856dbe4d7aae65844ccc68acb49c6da7dbf7cbacaf5bcf37019f4c0c60b3be84", size = 8914 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/99/3c/22c2f99afb6b5645c2bac806568b1c750b14a083fe65a75cdbca1d40afb1/django_cors_middleware-1.5.0-py3-none-any.whl", hash = "sha256:5bbdea85e22909d596e26f6e0dbc174d5521429fa3943ae02a2c6c48e76c88c7", size = 9195 },
+]
+
+[[package]]
 name = "django-extensions"
 version = "3.2.3"
 source = { registry = "https://pypi.org/simple" }
@@ -118,6 +127,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "black" },
     { name = "django" },
+    { name = "django-cors-middleware" },
     { name = "django-extensions" },
     { name = "djangorestframework" },
     { name = "drf-yasg" },
@@ -127,6 +137,7 @@ dependencies = [
 requires-dist = [
     { name = "black", specifier = ">=24.10.0" },
     { name = "django", specifier = ">=5.1.3" },
+    { name = "django-cors-middleware", specifier = ">=1.5.0" },
     { name = "django-extensions", specifier = ">=3.2.3" },
     { name = "djangorestframework", specifier = ">=3.15.2" },
     { name = "drf-yasg", specifier = ">=1.21.8" },
