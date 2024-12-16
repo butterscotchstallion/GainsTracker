@@ -14,3 +14,5 @@ export let programsAPI: {
     programsUpdate(id: number, data: Program, options?: RawAxiosRequestConfig): AxiosPromise<Program>
 };
 programsAPI = ProgramsApiFactory(configuration);
+
+

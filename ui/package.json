@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-api": "openapi-generator-cli generate -i schema.yaml -g typescript-axios -o src\\lib\\components\\api\\generated"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.1",
