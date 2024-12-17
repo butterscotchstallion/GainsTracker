@@ -9,7 +9,8 @@ A web-based application to track my workouts using Django and Angular
 # corsheaders issue
 
 - Incompatible with Django 4.x
-- Go to your Python installation folder -> Lib -> site-packages -> corsheaders -> signal.py file.
+- Installing this library will stop the server from starting
+- To fix it: .venv -> Lib -> site-packages -> corsheaders -> signal.py file.
 
 ```py
 from django.dispatch import Signal

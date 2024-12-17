@@ -3,6 +3,7 @@ from rest_framework import routers, serializers, viewsets
 
 from exercises.models import Exercise
 from programs.models import Program
+from sessions.models import Session
 
 
 # Serializers define the API representation.
@@ -18,23 +19,32 @@ class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
 
 
-# Serializers define the API representation.
 class ExerciseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Exercise
         fields = ["exercise_name"]
 
 
-# ViewSets define the view behavior.
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
 
 
+class SessionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Session
+        fields = ["pub_date", "num_repetitions", "num_sets"]
+
+
+class SessionViewSet(viewsets.ModelViewSet):
+    queryset = Session.objects.all()
+    serializer_class = SessionSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r"programs", ProgramViewSet)
 router.register(r"exercises", ExerciseViewSet)
-
+router.register(r"sessions", SessionViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
