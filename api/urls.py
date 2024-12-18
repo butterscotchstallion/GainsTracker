@@ -33,7 +33,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Session
-        fields = ["pub_date", "num_repetitions", "num_sets"]
+        fields = ["pub_date", "num_repetitions", "num_sets", "program"]
 
 
 class SessionViewSet(viewsets.ModelViewSet):

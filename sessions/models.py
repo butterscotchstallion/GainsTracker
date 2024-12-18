@@ -4,7 +4,7 @@ from programs.models import Program
 
 
 class Session(models.Model):
-    program_id = models.ForeignKey(Program, null=True, on_delete=models.SET(Program))
+    program = models.ForeignKey(Program, null=True, on_delete=models.SET(Program))
     num_repetitions = models.IntegerField()
     num_sets = models.IntegerField()
     pub_date = models.DateTimeField("date published")
