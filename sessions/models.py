@@ -12,5 +12,5 @@ class Session(models.Model):
     class Meta:
         db_table = "gt_sessions_session"
 
-    def __str__(self):
-        return self.pub_date
+    def __str__(self) -> str:
+        return str(self.pub_date)

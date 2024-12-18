@@ -197,6 +197,96 @@ paths:
       description: A unique integer value identifying this program.
       required: true
       type: integer
+  /schedules/:
+    get:
+      operationId: schedules_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Schedule'
+      tags:
+      - schedules
+    post:
+      operationId: schedules_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Schedule'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Schedule'
+      tags:
+      - schedules
+    parameters: []
+  /schedules/{id}/:
+    get:
+      operationId: schedules_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Schedule'
+      tags:
+      - schedules
+    put:
+      operationId: schedules_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Schedule'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Schedule'
+      tags:
+      - schedules
+    patch:
+      operationId: schedules_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Schedule'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Schedule'
+      tags:
+      - schedules
+    delete:
+      operationId: schedules_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - schedules
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this schedule.
+      required: true
+      type: integer
   /sessions/:
     get:
       operationId: sessions_list
@@ -313,6 +403,32 @@ definitions:
         title: Date published
         type: string
         format: date-time
+  Schedule:
+    required:
+    - pub_date
+    - day_of_week
+    - schedule_name
+    type: object
+    properties:
+      pub_date:
+        title: Date published
+        type: string
+        format: date-time
+      program:
+        title: Program
+        type: string
+        format: uri
+        x-nullable: true
+      day_of_week:
+        title: Day of week
+        type: integer
+        maximum: 9223372036854775807
+        minimum: -9223372036854775808
+      schedule_name:
+        title: Schedule name
+        type: string
+        maxLength: 50
+        minLength: 1
   Session:
     required:
     - pub_date
@@ -334,3 +450,8 @@ definitions:
         type: integer
         maximum: 9223372036854775807
         minimum: -9223372036854775808
+      program:
+        title: Program
+        type: string
+        format: uri
+        x-nullable: true

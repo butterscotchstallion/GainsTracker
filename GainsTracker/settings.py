@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "programs.apps.ProgramsConfig",
     "exercises.apps.ExercisesConfig",
     "sessions.apps.SessionsConfig",
+    "schedules.apps.SchedulesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -3,6 +3,7 @@ from rest_framework import routers, serializers, viewsets
 
 from exercises.models import Exercise
 from programs.models import Program
+from schedules.models import Schedule
 from sessions.models import Session
 
 
@@ -41,10 +42,22 @@ class SessionViewSet(viewsets.ModelViewSet):
     serializer_class = SessionSerializer
 
 
+class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = ["pub_date", "program", "day_of_week", "schedule_name"]
+
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r"programs", ProgramViewSet)
 router.register(r"exercises", ExerciseViewSet)
 router.register(r"sessions", SessionViewSet)
+router.register(r"schedules", ScheduleViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
