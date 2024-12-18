@@ -1,4 +1,4 @@
-import {Configuration, Program, ProgramsApiFactory, SessionsApiFactory} from "./generated";
+import {Configuration, Program, ProgramsApiFactory, SchedulesApiFactory, SessionsApiFactory} from "./generated";
 import {AxiosPromise, RawAxiosRequestConfig} from "axios";
 
 const configuration = new Configuration({
@@ -15,5 +15,5 @@ export let programsAPI: {
 };
 programsAPI = ProgramsApiFactory(configuration);
 export let sessionsAPI = SessionsApiFactory(configuration);
-
+export let schedulesAPI = SchedulesApiFactory(configuration);
 
