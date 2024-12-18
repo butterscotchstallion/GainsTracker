@@ -1,0 +1,43 @@
+import {AxiosPromise, AxiosResponse} from "axios";
+import {Session} from "../components/api/generated";
+import {sessionsAPI} from "../components/api/api.ts";
+import {useEffect, useState} from "react";
+import {format} from "date-fns";
+
+const sessions$: AxiosPromise<Session[]> = sessionsAPI.sessionsList();
+
+export default function SessionsPage() {
+    const [results, setResults] = useState<Session[]>([]);
+
+    useEffect(() => {
+        sessions$.then((response: AxiosResponse<Session[]>) => {
+            setResults(response.data);
+        });
+    }, []);
+
+    return (
+        <>
+            <h1>Sessions</h1>
+            {results.length > 0 ? (
+                <table className="mt-3 min-w-80">
+                    <thead>
+                    <tr>
+                        <th className={"text-left"}>Date</th>
+                        <th className={"text-left"}>Sets</th>
+                        <th className={"text-left"}>Repetitions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {results && results.map((session: Session) => (
+                        <tr key={session.pub_date}>
+                            <td>{format(new Date(session.pub_date), "MMM dd yyyy")}</td>
+                            <td>{session.num_sets}</td>
+                            <td>{session.num_repetitions}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : 'No sessions found.'}
+        </>
+    )
+}
