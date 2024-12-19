@@ -1,47 +1,48 @@
-import Calendar from 'react-calendar';
 import {useEffect, useState} from "react";
-import {isSameDay} from "date-fns";
 import {Schedule} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
 import {schedulesAPI} from "../components/api/api.ts";
-
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-function onChange() {
-
-}
+import {addDays, format} from "date-fns";
 
 export default function SchedulePage() {
-    const [value, onChange] = useState<Value>(new Date());
     const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const datesToAddClassTo: any[] = [];
+    const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
 
-    function tileClassName({date, view}): string | undefined {
-        // Add class to tiles in month view only
-        if (view === 'month') {
-            // Check if a date React-Calendar wants to check is on the list of dates to add class to
-            if (datesToAddClassTo.find(dDate => isSameDay(dDate, date))) {
-                return 'bg-slate-500';
-            }
-        }
+    function getFirstDayOfWeek(): Date {
+        const curDate = new Date();
+        const first: number = curDate.getDate() - curDate.getDay();
+        return new Date(curDate.setDate(first));
     }
 
-    const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
+    function getDaysOfCurrentWeek(): Date[] {
+        const firstDayOfWeek: Date = getFirstDayOfWeek();
+        const days: Date[] = [];
+        for (let j: number = 0; j < 7; j++) {
+            days.push(addDays(firstDayOfWeek, j));
+        }
+        return days;
+    }
+
+    const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
+
     useEffect(() => {
         schedules$.then((response: AxiosResponse<Schedule[]>) => {
             setSchedules(response.data);
         });
     })
 
+    function getDateHeader(dayOfWeek: number): string {
+        return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd yyyy");
+    }
+
     return (
         <>
             <h1>Schedule</h1>
             <div className="max-w-xl">
-                <Calendar
-                    onChange={onChange}
-                    tileClassName={tileClassName}
-                    value={value}/>
+                {schedules.map((schedule: Schedule) => (
+                    <h4 className={"text-lg font-bold"}
+                        key={schedule.day_of_week}>{getDateHeader(schedule.day_of_week)}</h4>
+                ))}
             </div>
         </>
     )
