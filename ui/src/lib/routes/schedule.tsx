@@ -1,13 +1,25 @@
 import {useEffect, useState} from "react";
-import {Schedule} from "../components/api/generated";
+import {Schedule, ScheduleExercise} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
-import {schedulesAPI} from "../components/api/api.ts";
+import {scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
+    const [scheduleExercises, setScheduleExercises] = useState<ScheduleExercise[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
+    const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
+
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, ScheduleExercise> {
+        const scheduleIdExerciseMap: Map<number, ScheduleExercise> = new Map();
+
+        scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
+            scheduleIdExerciseMap.set(scheduleExercise)
+        })
+
+        return scheduleIdExerciseMap
+    }
 
     function getFirstDayOfWeek(): Date {
         const curDate = new Date();
@@ -29,6 +41,9 @@ export default function SchedulePage() {
     useEffect(() => {
         schedules$.then((response: AxiosResponse<Schedule[]>) => {
             setSchedules(response.data);
+        }).catch(console.error);
+        scheduleExercises$.then((response: AxiosResponse<ScheduleExercise[]>) => {
+            setScheduleExercises(response.data);
         }).catch(console.error);
     }, [])
 

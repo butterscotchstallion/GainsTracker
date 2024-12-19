@@ -7,18 +7,18 @@ import {format} from "date-fns";
 const sessions$: AxiosPromise<Session[]> = sessionsAPI.sessionsList();
 
 export default function SessionsPage() {
-    const [results, setResults] = useState<Session[]>([]);
-
+    const [sessions, setSessions] = useState<Session[]>([]);
+    
     useEffect(() => {
         sessions$.then((response: AxiosResponse<Session[]>) => {
-            setResults(response.data);
+            setSessions(response.data);
         });
     }, []);
 
     return (
         <>
             <h1>Sessions</h1>
-            {results.length > 0 ? (
+            {sessions.length > 0 ? (
                 <table className="mt-3 min-w-80">
                     <thead>
                     <tr>
@@ -28,7 +28,7 @@ export default function SessionsPage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {results && results.map((session: Session) => (
+                    {sessions && sessions.map((session: Session) => (
                         <tr key={session.pub_date}>
                             <td>{format(new Date(session.pub_date), "MMM dd yyyy")}</td>
                             <td>{session.num_sets}</td>

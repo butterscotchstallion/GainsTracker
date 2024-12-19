@@ -45,7 +45,7 @@ class SessionViewSet(viewsets.ModelViewSet):
 class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
-        fields = ["pub_date", "program", "day_of_week", "schedule_name"]
+        fields = ["id", "pub_date", "program", "day_of_week", "schedule_name"]
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):
