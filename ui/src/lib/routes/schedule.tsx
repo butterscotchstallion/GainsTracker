@@ -3,6 +3,7 @@ import {Schedule} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
 import {schedulesAPI} from "../components/api/api.ts";
 import {addDays, format} from "date-fns";
+import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -28,20 +29,32 @@ export default function SchedulePage() {
     useEffect(() => {
         schedules$.then((response: AxiosResponse<Schedule[]>) => {
             setSchedules(response.data);
-        });
-    })
+        }).catch(console.error);
+    }, [])
 
     function getDateHeader(dayOfWeek: number): string {
-        return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd yyyy");
+        return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd");
     }
 
     return (
         <>
             <h1>Schedule</h1>
-            <div className="max-w-xl">
-                {schedules.map((schedule: Schedule) => (
-                    <h4 className={"text-lg font-bold"}
-                        key={schedule.day_of_week}>{getDateHeader(schedule.day_of_week)}</h4>
+            <div>
+                {schedules.map((schedule: Schedule, index: number) => (
+                    <Card key={index} className="w-[450px] mt-3">
+                        <CardHeader>
+                            <CardTitle>
+                                <h4 className={"text-lg"}
+                                    key={schedule.day_of_week}>
+                                    Workout {schedule.schedule_name} &mdash;&nbsp;
+                                    {getDateHeader(schedule.day_of_week)}
+                                </h4>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            Exercises go here.
+                        </CardContent>
+                    </Card>
                 ))}
             </div>
         </>
