@@ -15,7 +15,8 @@ export default function SchedulePage() {
         const scheduleIdExerciseMap: Map<number, ScheduleExercise> = new Map();
 
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
-            scheduleIdExerciseMap.set(scheduleExercise)
+            //scheduleIdExerciseMap.set(scheduleExercise)
+            // Need to get schedule ID somehow here
         })
 
         return scheduleIdExerciseMap

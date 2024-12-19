@@ -20,8 +20,8 @@ class ScheduleExercise(models.Model):
     exercise = models.ForeignKey(
         Exercise, null=True, on_delete=models.SET("exercises.Exercise")
     )
-    num_repetitions = models.IntegerField()
-    num_sets = models.IntegerField()
+    num_repetitions = models.IntegerField(default=5)
+    num_sets = models.IntegerField(default=5)
 
     def __str__(self) -> str:
         return f"{self.schedule.schedule_name} - {self.exercise.exercise_name}"
