@@ -57,8 +57,6 @@ class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ScheduleExercise
         fields = [
-            "schedule",
-            "exercise",
             "num_repetitions",
             "num_sets",
             "exercise_name",

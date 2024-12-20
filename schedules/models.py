@@ -28,7 +28,7 @@ class ScheduleExercise(models.Model):
         return self.exercise.exercise_name
 
     @property
-    def schedule_id(self):
+    def schedule_id(self) -> int:
         return self.schedule.id
 
     def __str__(self) -> str:

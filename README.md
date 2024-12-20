@@ -1,10 +1,15 @@
 # GainsTracker
 
-A web-based application to track my workouts using Django and Angular
+A web-based application to track my workouts using Django and React
 
 # Run API server
 
-`python manage.py runserver`
+- `python manage.py runserver`
+
+# Run front end
+
+- `cd ui`
+- `npm run dev`
 
 # corsheaders issue
 

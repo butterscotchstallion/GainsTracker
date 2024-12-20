@@ -13,21 +13,26 @@ interface IExerciseInfo {
 
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const [scheduleExercises, setScheduleExercises] = useState<ScheduleExercise[]>([]);
+    const [exercises, setExercises] = useState<IExerciseInfo[]>([])
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     let scheduleIdExerciseMap: Map<number, IExerciseInfo[]> = new Map();
 
-    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, IExerciseInfo> {
-        const scheduleIdExerciseMap: Map<number, IExerciseInfo> = new Map();
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, IExerciseInfo[]> {
+        const scheduleIdExerciseMap: Map<number, IExerciseInfo[]> = new Map();
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
             if (scheduleExercise.schedule_id) {
-                const schedule_id: number = parseInt(scheduleExercise.schedule_id, 10);
-                scheduleIdExerciseMap.set(schedule_id, {
+                const scheduleId: number = parseInt(scheduleExercise.schedule_id, 10);
+                let exercises: IExerciseInfo[] = [];
+                if (scheduleIdExerciseMap.has(scheduleId)) {
+                    exercises = scheduleIdExerciseMap.get(scheduleId)!;
+                }
+                exercises.push({
                     sets: scheduleExercise.num_sets,
                     repetitions: scheduleExercise.num_repetitions,
                     exercise_name: scheduleExercise.exercise_name
                 });
+                scheduleIdExerciseMap.set(scheduleId, exercises);
             } else {
                 console.error("Schedule exercise has no schedule id?!");
             }
@@ -53,21 +58,25 @@ export default function SchedulePage() {
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
 
     useEffect(() => {
-        /*schedules$.then((response: AxiosResponse<Schedule[]>) => {
-            setSchedules(response.data);
-        }).catch(console.error);
-        scheduleExercises$.then((response: AxiosResponse<ScheduleExercise[]>) => {
-            setScheduleExercises(response.data);
-            scheduleIdExerciseMap = getScheduleIdExerciseMap(scheduleExercises);
-        }).catch(console.error);*/
         Promise.all([
             schedules$,
             scheduleExercises$
         ]).then((results: AxiosResponse[]) => {
             setSchedules(results[0].data);
-            setScheduleExercises(results[1].data);
             scheduleIdExerciseMap = getScheduleIdExerciseMap(results[1].data);
-        })
+            /*
+            const exc: IExerciseInfo[] = [];
+            results[1].data.forEach((scheduleExercise: ScheduleExercise) => {
+                const scheduleId: number = parseInt(scheduleExercise.schedule_id!, 10);
+                const exerciseInfo: IExerciseInfo[] | undefined = scheduleIdExerciseMap.get(scheduleId)
+                if (exerciseInfo) {
+                    //exc.push(exerciseInfo)
+                } else {
+                    console.error("Exercise info not found for schedule id: " + scheduleId);
+                }
+            });
+            //setExercises(exerciseInfo);*/
+        }).catch(console.error);
     }, []);
 
     function getDateHeader(dayOfWeek: number): string {
@@ -90,7 +99,11 @@ export default function SchedulePage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            Exercises go here.
+                            {scheduleIdExerciseMap.get(schedule.id)!?.length > 0 ? (
+                                scheduleIdExerciseMap.get(schedule.id)!?.map((exercise: IExerciseInfo) => (
+                                    <p key={exercise.exercise_name}>{exercise.exercise_name}</p>
+                                ))
+                            ) : 'No exercises found.'}
                         </CardContent>
                     </Card>
                 ))}
