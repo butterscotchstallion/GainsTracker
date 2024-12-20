@@ -5,20 +5,33 @@ import {scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 
+interface IExerciseInfo {
+    sets: number | undefined,
+    repetitions: number | undefined,
+    exercise_name: string | undefined
+}
+
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
     const [scheduleExercises, setScheduleExercises] = useState<ScheduleExercise[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
+    let scheduleIdExerciseMap: Map<number, IExerciseInfo[]> = new Map();
 
-    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, ScheduleExercise> {
-        const scheduleIdExerciseMap: Map<number, ScheduleExercise> = new Map();
-
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, IExerciseInfo> {
+        const scheduleIdExerciseMap: Map<number, IExerciseInfo> = new Map();
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
-            //scheduleIdExerciseMap.set(scheduleExercise)
-            // Need to get schedule ID somehow here
-        })
-
+            if (scheduleExercise.schedule_id) {
+                const schedule_id: number = parseInt(scheduleExercise.schedule_id, 10);
+                scheduleIdExerciseMap.set(schedule_id, {
+                    sets: scheduleExercise.num_sets,
+                    repetitions: scheduleExercise.num_repetitions,
+                    exercise_name: scheduleExercise.exercise_name
+                });
+            } else {
+                console.error("Schedule exercise has no schedule id?!");
+            }
+        });
         return scheduleIdExerciseMap
     }
 
@@ -40,13 +53,22 @@ export default function SchedulePage() {
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
 
     useEffect(() => {
-        schedules$.then((response: AxiosResponse<Schedule[]>) => {
+        /*schedules$.then((response: AxiosResponse<Schedule[]>) => {
             setSchedules(response.data);
         }).catch(console.error);
         scheduleExercises$.then((response: AxiosResponse<ScheduleExercise[]>) => {
             setScheduleExercises(response.data);
-        }).catch(console.error);
-    }, [])
+            scheduleIdExerciseMap = getScheduleIdExerciseMap(scheduleExercises);
+        }).catch(console.error);*/
+        Promise.all([
+            schedules$,
+            scheduleExercises$
+        ]).then((results: AxiosResponse[]) => {
+            setSchedules(results[0].data);
+            setScheduleExercises(results[1].data);
+            scheduleIdExerciseMap = getScheduleIdExerciseMap(results[1].data);
+        })
+    }, []);
 
     function getDateHeader(dayOfWeek: number): string {
         return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd");

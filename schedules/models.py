@@ -23,5 +23,13 @@ class ScheduleExercise(models.Model):
     num_repetitions = models.IntegerField(default=5)
     num_sets = models.IntegerField(default=5)
 
+    @property
+    def exercise_name(self):
+        return self.exercise.exercise_name
+
+    @property
+    def schedule_id(self):
+        return self.schedule.id
+
     def __str__(self) -> str:
         return f"{self.schedule.schedule_name} - {self.exercise.exercise_name}"

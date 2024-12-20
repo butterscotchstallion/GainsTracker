@@ -56,11 +56,21 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ScheduleExercise
-        fields = ["schedule", "exercise", "num_repetitions", "num_sets"]
+        fields = [
+            "schedule",
+            "exercise",
+            "num_repetitions",
+            "num_sets",
+            "exercise_name",
+            "schedule_id",
+        ]
 
 
 class ScheduleExerciseViewSet(viewsets.ModelViewSet):
-    queryset = ScheduleExercise.objects.all()
+    # queryset = ScheduleExercise.objects.all()
+    queryset = ScheduleExercise.objects.select_related("schedule").prefetch_related(
+        "schedule"
+    )
     serializer_class = ScheduleExerciseSerializer
 
 
