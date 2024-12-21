@@ -22,7 +22,7 @@ export default function BaseLayout({children}: Props) {
                 </header>
             </div>
             <main className="bg-slate-300 w-full h-screen">
-                <div className="flex">
+                <div className="flex bg-slate-300">
                     <menu className="flex-none h-screen">
                         <li className="p-4">
                             <NavLink to="/schedule" end>

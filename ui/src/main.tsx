@@ -1,14 +1,15 @@
-import {StrictMode, Suspense} from 'react'
+import React, {StrictMode, Suspense} from 'react'
 import {createRoot} from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import {BrowserRouter, Route, Routes} from 'react-router'
-import ProgramsPage from "./lib/routes/programs.tsx";
-import SessionsPage from "./lib/routes/sessions.tsx";
 import {Loader} from "lucide-react";
-import SchedulePage from "./lib/routes/schedule.tsx";
 
-createRoot(document.getElementById('root')!).render(
+const SchedulePage = React.lazy(() => import("./lib/routes/schedule.tsx"));
+const ProgramsPage = React.lazy(() => import("./lib/routes/programs.tsx"));
+const SessionsPage = React.lazy(() => import("./lib/routes/sessions.tsx"));
+
+createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Suspense fallback={<Loader/>}>
             <BrowserRouter>
@@ -21,6 +22,6 @@ createRoot(document.getElementById('root')!).render(
                 </Routes>
             </BrowserRouter>
         </Suspense>
-    </StrictMode>,
-)
+    </StrictMode>
+);
 
