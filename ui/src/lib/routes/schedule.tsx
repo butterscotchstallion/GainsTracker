@@ -104,9 +104,26 @@ export default function SchedulePage() {
                         </CardHeader>
                         <CardContent>
                             {schedule.exercises.length > 0 ? (
-                                schedule.exercises.map((exercise: IExerciseInfo) => (
-                                    <p key={exercise.exerciseName}>{exercise.exerciseName}</p>
-                                ))
+                                <table className="w-full">
+                                    <thead>
+                                    <tr>
+                                        <th className={"text-left"}>Exercise</th>
+                                        <th className={"text-left"}>Sets</th>
+                                        <th className={"text-left"}>Repetitions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
+                                            <tr key={index}>
+                                                <td width="60%">{exercise.exerciseName}</td>
+                                                <td>{exercise.sets}</td>
+                                                <td>{exercise.repetitions}</td>
+                                            </tr>
+                                        ))
+                                    }
+                                    </tbody>
+                                </table>
                             ) : 'No exercises found.'}
                         </CardContent>
                     </Card>
