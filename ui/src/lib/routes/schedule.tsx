@@ -90,16 +90,19 @@ export default function SchedulePage() {
     return (
         <>
             <h1>Schedule</h1>
-            <div>
+            <main className={"w-1/2"}>
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
-                    <Card key={index} className="w-[450px] mt-3">
+                    <Card key={index} className="mt-3">
                         <CardHeader>
                             <CardTitle>
-                                <h4 className={"text-lg"}
-                                    key={schedule.day_of_week}>
-                                    Workout {schedule.schedule_name} &mdash;&nbsp;
-                                    {getDateHeader(schedule.day_of_week)}
-                                </h4>
+                                <div className="flex justify-between">
+                                    <h4 className="text-lg font-medium" key={schedule.day_of_week}>
+                                        Workout {schedule.schedule_name}
+                                    </h4>
+                                    <h4 className="text-lg font-medium">
+                                        {getDateHeader(schedule.day_of_week)}
+                                    </h4>
+                                </div>
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -116,9 +119,9 @@ export default function SchedulePage() {
                                     {
                                         schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
                                             <tr key={index}>
-                                                <td width="60%">{exercise.exerciseName}</td>
-                                                <td>{exercise.sets}</td>
-                                                <td>{exercise.repetitions}</td>
+                                                <td width="70%">{exercise.exerciseName}</td>
+                                                <td width="20%">{exercise.sets}</td>
+                                                <td width="10%">{exercise.repetitions}</td>
                                             </tr>
                                         ))
                                     }
@@ -128,7 +131,7 @@ export default function SchedulePage() {
                         </CardContent>
                     </Card>
                 ))}
-            </div>
+            </main>
         </>
     )
 }
