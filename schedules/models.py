@@ -24,8 +24,12 @@ class ScheduleExercise(models.Model):
     num_sets = models.IntegerField(default=5)
 
     @property
-    def exercise_name(self):
+    def exercise_name(self) -> str:
         return self.exercise.exercise_name
+
+    @property
+    def schedule_name(self) -> str:
+        return self.schedule.schedule_name
 
     @property
     def schedule_id(self) -> int:

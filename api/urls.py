@@ -60,7 +60,7 @@ class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
             "num_repetitions",
             "num_sets",
             "exercise_name",
-            "schedule_id",
+            "schedule_name",
         ]
 
 

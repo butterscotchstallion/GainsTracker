@@ -8,34 +8,32 @@ import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 interface IExerciseInfo {
     sets: number | undefined,
     repetitions: number | undefined,
-    exercise_name: string | undefined
+    exerciseName: string | undefined
+}
+
+interface IDisplaySchedule extends Schedule {
+    exercises: IExerciseInfo[]
 }
 
 export default function SchedulePage() {
-    const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const [exercises, setExercises] = useState<IExerciseInfo[]>([])
+    const [schedules, setSchedules] = useState<IDisplaySchedule[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
-    let scheduleIdExerciseMap: Map<number, IExerciseInfo[]> = new Map();
+    let scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = new Map();
 
-    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<number, IExerciseInfo[]> {
-        const scheduleIdExerciseMap: Map<number, IExerciseInfo[]> = new Map();
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<string, IExerciseInfo[]> {
+        const scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = new Map();
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
-            if (scheduleExercise.schedule_id) {
-                const scheduleId: number = parseInt(scheduleExercise.schedule_id, 10);
-                let exercises: IExerciseInfo[] = [];
-                if (scheduleIdExerciseMap.has(scheduleId)) {
-                    exercises = scheduleIdExerciseMap.get(scheduleId)!;
-                }
-                exercises.push({
-                    sets: scheduleExercise.num_sets,
-                    repetitions: scheduleExercise.num_repetitions,
-                    exercise_name: scheduleExercise.exercise_name
-                });
-                scheduleIdExerciseMap.set(scheduleId, exercises);
-            } else {
-                console.error("Schedule exercise has no schedule id?!");
+            let exercises: IExerciseInfo[] = [];
+            if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name!)) {
+                exercises = scheduleIdExerciseMap.get(scheduleExercise.schedule_name!)!;
             }
+            exercises.push({
+                sets: scheduleExercise.num_sets,
+                repetitions: scheduleExercise.num_repetitions,
+                exerciseName: scheduleExercise.exercise_name
+            });
+            scheduleIdExerciseMap.set(scheduleExercise.schedule_name!, exercises);
         });
         return scheduleIdExerciseMap
     }
@@ -56,26 +54,32 @@ export default function SchedulePage() {
     }
 
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
+    const displaySchedules: IDisplaySchedule[] = [];
 
     useEffect(() => {
         Promise.all([
             schedules$,
             scheduleExercises$
         ]).then((results: AxiosResponse[]) => {
-            setSchedules(results[0].data);
-            scheduleIdExerciseMap = getScheduleIdExerciseMap(results[1].data);
-            /*
-            const exc: IExerciseInfo[] = [];
-            results[1].data.forEach((scheduleExercise: ScheduleExercise) => {
-                const scheduleId: number = parseInt(scheduleExercise.schedule_id!, 10);
-                const exerciseInfo: IExerciseInfo[] | undefined = scheduleIdExerciseMap.get(scheduleId)
+            const s: Schedule[] = results[0].data;
+            const se: ScheduleExercise[] = results[1].data;
+            scheduleIdExerciseMap = getScheduleIdExerciseMap(se);
+            /**
+             * Iterate schedules and add exercises corresponding to each scheduleId.
+             * This is done because the original model doesn't have exercises
+             */
+            s.forEach((schedule: Schedule) => {
+                const scheduleId: number = schedule.id!;
+                const exerciseInfo: IExerciseInfo[] | undefined = scheduleIdExerciseMap.get(schedule.schedule_name);
+                const displaySchedule: IDisplaySchedule = {...schedule, exercises: []};
                 if (exerciseInfo) {
-                    //exc.push(exerciseInfo)
+                    displaySchedule.exercises = exerciseInfo;
                 } else {
                     console.error("Exercise info not found for schedule id: " + scheduleId);
                 }
+                displaySchedules.push(displaySchedule);
             });
-            //setExercises(exerciseInfo);*/
+            setSchedules(displaySchedules);
         }).catch(console.error);
     }, []);
 
@@ -87,7 +91,7 @@ export default function SchedulePage() {
         <>
             <h1>Schedule</h1>
             <div>
-                {schedules.map((schedule: Schedule, index: number) => (
+                {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="w-[450px] mt-3">
                         <CardHeader>
                             <CardTitle>
@@ -99,9 +103,9 @@ export default function SchedulePage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            {scheduleIdExerciseMap.get(schedule.id)!?.length > 0 ? (
-                                scheduleIdExerciseMap.get(schedule.id)!?.map((exercise: IExerciseInfo) => (
-                                    <p key={exercise.exercise_name}>{exercise.exercise_name}</p>
+                            {schedule.exercises.length > 0 ? (
+                                schedule.exercises.map((exercise: IExerciseInfo) => (
+                                    <p key={exercise.exerciseName}>{exercise.exerciseName}</p>
                                 ))
                             ) : 'No exercises found.'}
                         </CardContent>
