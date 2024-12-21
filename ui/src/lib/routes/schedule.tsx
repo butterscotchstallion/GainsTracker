@@ -90,7 +90,7 @@ export default function SchedulePage() {
     return (
         <>
             <h1>Schedule</h1>
-            <main className={"w-1/2"}>
+            <main className="max-w-md md:max-w-2xl">
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="mt-3">
                         <CardHeader>
