@@ -56,7 +56,7 @@ export default function SchedulePage() {
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
     const displaySchedules: IDisplaySchedule[] = [];
 
-    useEffect(() => {
+    function loadData() {
         Promise.all([
             schedules$,
             scheduleExercises$
@@ -81,11 +81,13 @@ export default function SchedulePage() {
             });
             setSchedules(displaySchedules);
         }).catch(console.error);
-    }, []);
+    }
 
     function getDateHeader(dayOfWeek: number): string {
         return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd");
     }
+
+    useEffect(loadData, []);
 
     return (
         <>
