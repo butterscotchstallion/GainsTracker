@@ -26,12 +26,17 @@ export default function SchedulePage() {
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
 
+    /**
+     * Each schedule can have different exercises with different weights for each exercise
+     * @param scheduleExercises
+     * @param exerciseWeights
+     */
     function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[], exerciseWeights: ExerciseWeights[]): Map<string, Map<string, IExerciseInfo[]>> {
         const scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = new Map();
         const exerciseWeightMap: Map<string, Map<string, number>> = getExerciseWeightMap(exerciseWeights);
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
             let exercises: IExerciseInfo[] = [];
-            if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name!)) {
+            if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name)) {
                 exercises = scheduleIdExerciseMap.get(scheduleExercise.schedule_name);
             }
             const scheduleMap = exerciseWeightMap.get(scheduleExercise.schedule_name);
