@@ -76,7 +76,7 @@ class ScheduleExerciseViewSet(viewsets.ModelViewSet):
 class ExerciseWeightsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ExerciseWeights
-        fields = ["schedule_name", "weight", "last_modified"]
+        fields = ["schedule_name", "weight", "last_modified", "exercise_name"]
 
 
 class ExerciseWeightsViewSet(viewsets.ModelViewSet):

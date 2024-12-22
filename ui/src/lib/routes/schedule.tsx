@@ -9,7 +9,7 @@ interface IExerciseInfo {
     sets: number | undefined,
     repetitions: number | undefined,
     exerciseName: string | undefined,
-    weight: ExerciseWeights[]
+    weight: number
 }
 
 interface IDisplaySchedule extends Schedule {
@@ -26,24 +26,24 @@ export default function SchedulePage() {
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
 
-
-    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[], exerciseWeights: ExerciseWeights[]): Map<string, > {
-        const scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = new Map();
-        const exerciseWeightMap: Map<string, number> = getExerciseWeightMap(exerciseWeights);
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[], exerciseWeights: ExerciseWeights[]): Map<string, Map<string, IExerciseInfo[]>> {
+        const scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = new Map();
+        const exerciseWeightMap: Map<string, Map<string, number>> = getExerciseWeightMap(exerciseWeights);
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
             let exercises: IExerciseInfo[] = [];
             if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name!)) {
-                exercises = scheduleIdExerciseMap.get(scheduleExercise.schedule_name!)!;
+                exercises = scheduleIdExerciseMap.get(scheduleExercise.schedule_name);
             }
+            const scheduleMap = exerciseWeightMap.get(scheduleExercise.schedule_name);
             exercises.push({
                 sets: scheduleExercise.num_sets,
                 repetitions: scheduleExercise.num_repetitions,
                 exerciseName: scheduleExercise.exercise_name,
-                weight: exerciseWeightMap.get(scheduleExercise.schedule_name!)!
+                weight: scheduleMap.get(scheduleExercise.exercise_name)
             });
-            scheduleIdExerciseMap.set(scheduleExercise.schedule_name!, exercises);
+            scheduleIdExerciseMap.set(scheduleExercise.schedule_name, exercises);
         });
-        return scheduleIdExerciseMap
+        return scheduleIdExerciseMap;
     }
 
     /**
@@ -54,16 +54,18 @@ export default function SchedulePage() {
      *     exercise name -> weight
      * }
      */
-    function getExerciseWeightMap(exerciseWeights: ExerciseWeights[]): Map<string, IExerciseNameWeights> {
-        const exerciseWeightMap: Map<string, number> = new Map();
+    function getExerciseWeightMap(exerciseWeights: ExerciseWeights[]): Map<string, Map<string, number>> {
+        const scheduleExerciseWeightMap: Map<string, Map<string, number>> = new Map();
         exerciseWeights.forEach((exerciseWeight: ExerciseWeights) => {
-            let weight: number = 0;
-            if (exerciseWeightMap.has(exerciseWeight.schedule_name!)) {
-                weight = exerciseWeightMap.get(exerciseWeight.schedule_name!)!;
+            // Initialize each schedule
+            if (!scheduleExerciseWeightMap.has(exerciseWeight.schedule_name!)) {
+                scheduleExerciseWeightMap.set(exerciseWeight.schedule_name!, new Map());
             }
-            exerciseWeightMap.set(exerciseWeight.schedule_name!, weight);
+            const exerciseWeightMap: Map<string, number> = scheduleExerciseWeightMap.get(exerciseWeight.schedule_name!)!;
+            exerciseWeightMap.set(exerciseWeight.exercise_name!, exerciseWeight.weight!);
+            scheduleExerciseWeightMap.set(exerciseWeight.schedule_name!, exerciseWeightMap);
         });
-        return exerciseWeightMap;
+        return scheduleExerciseWeightMap;
     }
 
     function getFirstDayOfWeek(): Date {
@@ -94,7 +96,7 @@ export default function SchedulePage() {
             const se: ScheduleExercise[] = results[1].data;
             const ex: ExerciseWeights[] = results[2].data;
 
-            let scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = getScheduleIdExerciseMap(se, ex);
+            let scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = getScheduleIdExerciseMap(se, ex);
 
             /**
              * Iterate schedules and add exercises corresponding to each scheduleId.
@@ -121,7 +123,7 @@ export default function SchedulePage() {
     return (
         <>
             <h1>Schedule</h1>
-            <main className="max-w-md md:max-w-2xl">
+            <main className="max-w-lg md:max-w-2xl">
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="mt-3">
                         <CardHeader>
@@ -151,8 +153,8 @@ export default function SchedulePage() {
                                     {
                                         schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
                                             <tr key={index}>
-                                                <td width="60%">{exercise.exerciseName}</td>
-                                                <td width="10%">{exercise.weight}</td>
+                                                <td width="50%">{exercise.exerciseName}</td>
+                                                <td width="20%">{exercise.weight}</td>
                                                 <td width="20%">{exercise.sets}</td>
                                                 <td width="10%">{exercise.repetitions}</td>
                                             </tr>

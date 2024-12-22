@@ -49,6 +49,10 @@ class ExerciseWeights(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     @property
+    def exercise_name(self) -> str:
+        return self.exercise.exercise_name
+
+    @property
     def schedule_name(self) -> str:
         return self.schedule.schedule_name
 
