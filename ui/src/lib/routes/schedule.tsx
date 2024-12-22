@@ -1,28 +1,35 @@
 import {useEffect, useState} from "react";
-import {Schedule, ScheduleExercise} from "../components/api/generated";
+import {ExerciseWeights, Schedule, ScheduleExercise} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
-import {scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
+import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 
 interface IExerciseInfo {
     sets: number | undefined,
     repetitions: number | undefined,
-    exerciseName: string | undefined
+    exerciseName: string | undefined,
+    weight: ExerciseWeights[]
 }
 
 interface IDisplaySchedule extends Schedule {
     exercises: IExerciseInfo[]
 }
 
+interface IExerciseNameWeights {
+    exerciseName: ExerciseWeights
+}
+
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<IDisplaySchedule[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
-    let scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = new Map();
+    const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
 
-    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[]): Map<string, IExerciseInfo[]> {
+
+    function getScheduleIdExerciseMap(scheduleExercises: ScheduleExercise[], exerciseWeights: ExerciseWeights[]): Map<string, > {
         const scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = new Map();
+        const exerciseWeightMap: Map<string, number> = getExerciseWeightMap(exerciseWeights);
         scheduleExercises.forEach((scheduleExercise: ScheduleExercise) => {
             let exercises: IExerciseInfo[] = [];
             if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name!)) {
@@ -31,11 +38,32 @@ export default function SchedulePage() {
             exercises.push({
                 sets: scheduleExercise.num_sets,
                 repetitions: scheduleExercise.num_repetitions,
-                exerciseName: scheduleExercise.exercise_name
+                exerciseName: scheduleExercise.exercise_name,
+                weight: exerciseWeightMap.get(scheduleExercise.schedule_name!)!
             });
             scheduleIdExerciseMap.set(scheduleExercise.schedule_name!, exercises);
         });
         return scheduleIdExerciseMap
+    }
+
+    /**
+     * Maps the weight for each exercise/schedule
+     * by the schedule name
+     *
+     * Map of schedule name -> map {
+     *     exercise name -> weight
+     * }
+     */
+    function getExerciseWeightMap(exerciseWeights: ExerciseWeights[]): Map<string, IExerciseNameWeights> {
+        const exerciseWeightMap: Map<string, number> = new Map();
+        exerciseWeights.forEach((exerciseWeight: ExerciseWeights) => {
+            let weight: number = 0;
+            if (exerciseWeightMap.has(exerciseWeight.schedule_name!)) {
+                weight = exerciseWeightMap.get(exerciseWeight.schedule_name!)!;
+            }
+            exerciseWeightMap.set(exerciseWeight.schedule_name!, weight);
+        });
+        return exerciseWeightMap;
     }
 
     function getFirstDayOfWeek(): Date {
@@ -59,27 +87,28 @@ export default function SchedulePage() {
     function loadData() {
         Promise.all([
             schedules$,
-            scheduleExercises$
+            scheduleExercises$,
+            exerciseWeights$
         ]).then((results: AxiosResponse[]) => {
             const s: Schedule[] = results[0].data;
             const se: ScheduleExercise[] = results[1].data;
-            scheduleIdExerciseMap = getScheduleIdExerciseMap(se);
+            const ex: ExerciseWeights[] = results[2].data;
+
+            let scheduleIdExerciseMap: Map<string, IExerciseInfo[]> = getScheduleIdExerciseMap(se, ex);
+
             /**
              * Iterate schedules and add exercises corresponding to each scheduleId.
              * This is done because the original model doesn't have exercises
              */
             s.forEach((schedule: Schedule) => {
-                const scheduleId: number = schedule.id!;
-                const exerciseInfo: IExerciseInfo[] | undefined = scheduleIdExerciseMap.get(schedule.schedule_name);
-                const displaySchedule: IDisplaySchedule = {...schedule, exercises: []};
-                if (exerciseInfo) {
-                    displaySchedule.exercises = exerciseInfo;
-                } else {
-                    console.error("Exercise info not found for schedule id: " + scheduleId);
-                }
+                const displaySchedule: IDisplaySchedule = {
+                    ...schedule,
+                    exercises: scheduleIdExerciseMap.get(schedule.schedule_name)!,
+                };
                 displaySchedules.push(displaySchedule);
             });
             setSchedules(displaySchedules);
+            console.log("Loaded data");
         }).catch(console.error);
     }
 
@@ -113,6 +142,7 @@ export default function SchedulePage() {
                                     <thead>
                                     <tr>
                                         <th className={"text-left"}>Exercise</th>
+                                        <th className={"text-left"}>Weight</th>
                                         <th className={"text-left"}>Sets</th>
                                         <th className={"text-left"}>Repetitions</th>
                                     </tr>
@@ -121,7 +151,8 @@ export default function SchedulePage() {
                                     {
                                         schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
                                             <tr key={index}>
-                                                <td width="70%">{exercise.exerciseName}</td>
+                                                <td width="60%">{exercise.exerciseName}</td>
+                                                <td width="10%">{exercise.weight}</td>
                                                 <td width="20%">{exercise.sets}</td>
                                                 <td width="10%">{exercise.repetitions}</td>
                                             </tr>

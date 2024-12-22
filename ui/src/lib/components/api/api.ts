@@ -1,5 +1,6 @@
 import {
     Configuration,
+    ExerciseWeightsApiFactory,
     Program,
     ProgramsApiFactory,
     ScheduleExercisesApiFactory,
@@ -24,3 +25,4 @@ programsAPI = ProgramsApiFactory(configuration);
 export let sessionsAPI = SessionsApiFactory(configuration);
 export let schedulesAPI = SchedulesApiFactory(configuration);
 export let scheduleExercisesAPI = ScheduleExercisesApiFactory(configuration);
+export let exerciseWeightsAPI = ExerciseWeightsApiFactory(configuration);

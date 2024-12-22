@@ -37,3 +37,20 @@ class ScheduleExercise(models.Model):
 
     def __str__(self) -> str:
         return f"{self.schedule.schedule_name} - {self.exercise.exercise_name}"
+
+
+# This causes a circular import if we put it in Exercises
+class ExerciseWeights(models.Model):
+    schedule = models.ForeignKey(Schedule, null=True, on_delete=models.SET(Schedule))
+    exercise = models.ForeignKey(
+        Exercise, null=True, on_delete=models.SET("exercises.Exercise")
+    )
+    weight = models.IntegerField(default=10)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    @property
+    def schedule_name(self) -> str:
+        return self.schedule.schedule_name
+
+    def __str__(self) -> str:
+        return f"{self.schedule.schedule_name} - {self.exercise.exercise_name} ({self.weight})"

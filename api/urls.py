@@ -3,7 +3,7 @@ from rest_framework import routers, serializers, viewsets
 
 from exercises.models import Exercise
 from programs.models import Program
-from schedules.models import Schedule, ScheduleExercise
+from schedules.models import ExerciseWeights, Schedule, ScheduleExercise
 from sessions.models import Session
 
 
@@ -31,6 +31,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
     serializer_class = ExerciseSerializer
 
 
+# Session
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Session
@@ -42,6 +43,7 @@ class SessionViewSet(viewsets.ModelViewSet):
     serializer_class = SessionSerializer
 
 
+# Schedule
 class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
@@ -53,6 +55,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = ScheduleSerializer
 
 
+# ScheduleExercise
 class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ScheduleExercise
@@ -65,11 +68,20 @@ class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ScheduleExerciseViewSet(viewsets.ModelViewSet):
-    # queryset = ScheduleExercise.objects.all()
-    queryset = ScheduleExercise.objects.select_related("schedule").prefetch_related(
-        "schedule"
-    )
+    queryset = ScheduleExercise.objects.all()
     serializer_class = ScheduleExerciseSerializer
+
+
+# ExerciseWeights
+class ExerciseWeightsSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ExerciseWeights
+        fields = ["schedule_name", "weight", "last_modified"]
+
+
+class ExerciseWeightsViewSet(viewsets.ModelViewSet):
+    queryset = ExerciseWeights.objects.all()
+    serializer_class = ExerciseWeightsSerializer
 
 
 router = routers.DefaultRouter()
@@ -78,6 +90,8 @@ router.register(r"exercises", ExerciseViewSet)
 router.register(r"sessions", SessionViewSet)
 router.register(r"schedules", ScheduleViewSet)
 router.register(r"schedule-exercises", ScheduleExerciseViewSet)
+router.register(r"exercise-weights", ExerciseWeightsViewSet)
+
 
 urlpatterns = [
     path("", include(router.urls)),
