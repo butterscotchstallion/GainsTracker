@@ -16,10 +16,6 @@ interface IDisplaySchedule extends Schedule {
     exercises: IExerciseInfo[]
 }
 
-interface IExerciseNameWeights {
-    exerciseName: ExerciseWeights
-}
-
 export default function SchedulePage() {
     const [schedules, setSchedules] = useState<IDisplaySchedule[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
@@ -115,7 +111,6 @@ export default function SchedulePage() {
                 displaySchedules.push(displaySchedule);
             });
             setSchedules(displaySchedules);
-            console.log("Loaded data");
         }).catch(console.error);
     }
 

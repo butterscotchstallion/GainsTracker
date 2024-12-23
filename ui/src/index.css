@@ -2,16 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    font-family: Georgia, serif;
-    color: #222;
-}
-
-a, a:visited {
-    color: #222;
-    text-decoration: none;
-
-    &:hover {
-        color: #ccc;
-    }
-}
