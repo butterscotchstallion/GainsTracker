@@ -3,14 +3,15 @@ import {createRoot} from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import {BrowserRouter, Route, Routes} from 'react-router'
-import {Loader} from "lucide-react";
+import Throbber from "./lib/components/Throbber.tsx";
+
 
 const SchedulePage = React.lazy(() => import("./lib/routes/schedule.tsx"));
 const ProgramsPage = React.lazy(() => import("./lib/routes/programs.tsx"));
 const SessionsPage = React.lazy(() => import("./lib/routes/sessions.tsx"));
 
 createRoot(document.getElementById("root")!).render(
-    <Suspense fallback={<Loader/>}>
+    <Suspense fallback={<Throbber/>}>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App/>}>
