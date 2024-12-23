@@ -2,6 +2,12 @@
 
 A web-based application to track my workouts using Django and React
 
+# Screenshots
+
+![Schedule Page](screenshots/schedule.png)
+![Programs Page](screenshots/programs.png)
+![Sessions Page](screenshots/sessions.png)
+
 # Run API server
 
 - `python manage.py runserver`
