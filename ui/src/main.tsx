@@ -14,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App/>}>
+                    <Route path="" element={<SchedulePage/>}/>
                     <Route path="schedule" element={<SchedulePage/>}/>
                     <Route path="programs" element={<ProgramsPage/>}/>
                     <Route path="sessions" element={<SessionsPage/>}/>

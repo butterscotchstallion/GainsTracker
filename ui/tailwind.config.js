@@ -29,7 +29,7 @@ export default {
         extend: {
             colors: {
                 primary: 'var(--color-primary)',
-                secondary: 'var(--secondary)',
+                secondary: 'var(--color-secondary)',
                 buttons: 'var(--color-buttons)',
                 typography: 'var(--color-typography)',
                 anchors: 'var(--color-anchors)',
