@@ -3,13 +3,14 @@ import Button from "../components/Button.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCalendarDays, faDumbbell, faPalette, faRectangleList} from "@fortawesome/free-solid-svg-icons";
 import React, {ChangeEvent} from "react";
+import {changeTheme} from "../components/themeSwitcher.ts";
 
 type Props = {
     children: React.ReactNode
 }
 
-function changeTheme(event: ChangeEvent<HTMLSelectElement>) {
-    document.querySelector("html")?.setAttribute("data-theme", event.target.value);
+function changeThemeFromSelect(event: ChangeEvent<HTMLSelectElement>) {
+    changeTheme(event.target.value);
 }
 
 export default function BaseLayout({children}: Props) {
@@ -50,7 +51,8 @@ export default function BaseLayout({children}: Props) {
                         <label htmlFor="theme-selector" className="text-white block mb-1">
                             <FontAwesomeIcon icon={faPalette}/>&nbsp; Theme
                         </label>
-                        <select onChange={changeTheme} id="theme-selector" className="block bg-secondary text-white">
+                        <select onChange={changeThemeFromSelect} id="theme-selector"
+                                className="block bg-secondary text-white">
                             <option value="plum">Plum</option>
                             <option value="verdant">verdant</option>
                         </select>
