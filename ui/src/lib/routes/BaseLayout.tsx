@@ -16,16 +16,24 @@ export default function BaseLayout({children}: Props) {
                     <div className="content-center inline-block">
                         <NavLink to="/" end>
                             <div className="flex justify-between">
-                                <div className="bg-white w-3"></div>
-                                <h1 className="text-2xl text-white capitalize logo-header border-b-8 border-solid border-white pl-3 pr-3">
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                <div className="w-1"></div>
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+
+                                <h1 className="text-2xl text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
                                     Gains Tracker
                                 </h1>
-                                <div className="bg-white w-3"></div>
+
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                <div className="w-1"></div>
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
                             </div>
                             <div className="flex justify-between h-7">
-                                <div className="bg-white w-3"></div>
-                                <div className="w-32"></div>
-                                <div className="bg-white w-3"></div>
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                <div className="" style={{"width": "160px"}}></div>
+                                <div className="bg-orange-700 ml-2" style={{"width": "12px"}}></div>
+                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
                             </div>
                         </NavLink>
                     </div>

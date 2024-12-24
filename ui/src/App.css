@@ -15,6 +15,7 @@ a, a:visited {
 
 .logo-header {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-transform: uppercase;
 }
 
 .loader {
