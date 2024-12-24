@@ -124,7 +124,7 @@ export default function SchedulePage() {
 
     return (
         <>
-            <h1>Schedule</h1>
+            <h1 className="gt-header">Schedule</h1>
             <main className="max-w-lg md:max-w-2xl">
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="mt-3">

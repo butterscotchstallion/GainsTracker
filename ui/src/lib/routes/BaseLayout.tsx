@@ -31,7 +31,7 @@ export default function BaseLayout({children}: Props) {
                                     <div className="bg-logoPlates h-full" style={{"width": "12px"}}></div>
                                 </div>
 
-                                <h1 className="h-[46px] text-2xl align-middle text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
+                                <h1 className="h-[46px] text-2xl align-middle text-[var(--color-logo-text)] gt-header border-b-8 border-solid border-black pl-3 pr-3">
                                     Gains Tracker
                                 </h1>
 

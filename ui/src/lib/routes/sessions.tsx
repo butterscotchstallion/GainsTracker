@@ -23,7 +23,7 @@ export default function SessionsPage() {
         <>
             <main className="max-w-lg md:max-w-2xl">
                 <div className="flex justify-between">
-                    <h1>Sessions</h1>
+                    <h1 className="gt-header">Sessions</h1>
 
                     <Button><FontAwesomeIcon icon={faSquarePlus}/>&nbsp; Start Session</Button>
                 </div>
