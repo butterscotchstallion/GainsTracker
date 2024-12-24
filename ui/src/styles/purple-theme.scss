@@ -1,0 +1,9 @@
+html[data-theme="purple"] {
+  --color-primary: #8A43B1;
+  --color-secondary: #2F2733;
+  --color-buttons: #52415C;
+  --color-buttons-text: #fff;
+  --color-typography: #222;
+  --color-anchors: #9F2FDB;
+  --color-anchors-hover: var(--color-buttons)
+}

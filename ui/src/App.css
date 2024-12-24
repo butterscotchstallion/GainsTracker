@@ -1,15 +1,15 @@
 body {
-    font-family: "Roboto", sans-serif;
+    font-family: "Open Sans", Helvetica, sans-serif;
     line-height: 1.5;
     color: #222;
 }
 
 a, a:visited {
-    color: #222;
+    color: var(--color-anchors);
     text-decoration: none;
 
     &:hover {
-        color: #ccc;
+        color: var(--color-anchors-hover);
     }
 }
 

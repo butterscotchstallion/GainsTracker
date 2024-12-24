@@ -12,7 +12,7 @@ export default function BaseLayout({children}: Props) {
     return (
         <>
             <div className="flex items-stretch bg-darkBg w-full">
-                <header className="w-full p-4 bg-headerBg">
+                <header className="w-full p-4 bg-secondary">
                     <div className="w-32 content-center inline-block">
                         <NavLink to="/" end>
                             <img src={"images/logo.png"} className="border-0" alt="Gains Tracker" width="250"

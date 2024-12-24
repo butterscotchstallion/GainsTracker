@@ -1,10 +1,9 @@
 import React, {Suspense} from 'react'
 import {createRoot} from 'react-dom/client'
-import './index.css'
+import './index.scss'
 import App from './App.tsx'
-import {BrowserRouter, Route, Routes} from 'react-router'
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router'
 import Throbber from "./lib/components/Throbber.tsx";
-
 
 const SchedulePage = React.lazy(() => import("./lib/routes/schedule.tsx"));
 const ProgramsPage = React.lazy(() => import("./lib/routes/programs.tsx"));
@@ -19,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
                     <Route path="programs" element={<ProgramsPage/>}/>
                     <Route path="sessions" element={<SessionsPage/>}/>
                 </Route>
+                <Route path="*" element={<Navigate to="/schedule"/>}/>
             </Routes>
         </BrowserRouter>
     </Suspense>

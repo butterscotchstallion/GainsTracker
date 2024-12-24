@@ -28,6 +28,13 @@ export default {
         },
         extend: {
             colors: {
+                primary: 'var(--color-primary)',
+                secondary: 'var(--secondary)',
+                buttons: 'var(--color-buttons)',
+                typography: 'var(--color-typography)',
+                anchors: 'var(--color-anchors)',
+                anchorsHover: 'var(--color-anchors-hover)',
+
                 main: '#88aaee',
                 mainAccent: '#4d80e6', // not needed for shadcn components
                 overlay: 'rgba(0,0,0,0.8)', // background color overlay for alert dialogs, modals, etc.

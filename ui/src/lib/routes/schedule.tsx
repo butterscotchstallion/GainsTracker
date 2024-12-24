@@ -4,6 +4,8 @@ import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
+import {faCalendarDay} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -133,7 +135,8 @@ export default function SchedulePage() {
                                         Workout {schedule.schedule_name}
                                     </h4>
                                     <h4 className="text-lg font-medium">
-                                        {getDateHeader(schedule.day_of_week)}
+                                        <FontAwesomeIcon
+                                            icon={faCalendarDay}/>&nbsp; {getDateHeader(schedule.day_of_week)}
                                     </h4>
                                 </div>
                             </CardTitle>
