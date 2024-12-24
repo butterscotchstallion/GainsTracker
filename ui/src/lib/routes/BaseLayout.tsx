@@ -54,7 +54,8 @@ export default function BaseLayout({children}: Props) {
                         <select onChange={changeThemeFromSelect} id="theme-selector"
                                 className="block bg-secondary text-white">
                             <option value="plum">Plum</option>
-                            <option value="verdant">verdant</option>
+                            <option value="verdant">Verdant</option>
+                            <option value="fall">Fall</option>
                         </select>
                     </div>
                 </header>
