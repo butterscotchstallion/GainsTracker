@@ -15,25 +15,26 @@ export default function BaseLayout({children}: Props) {
                 <header className="w-full p-4 bg-secondary">
                     <div className="content-center inline-block">
                         <NavLink to="/" end>
-                            <div className="flex justify-between">
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                <div className="w-1"></div>
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                            <div className="flex h-20">
+                                {/* left plates */}
+                                <div className="flex justify-between">
+                                    <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
+                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="w-1"></div>
+                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                </div>
 
-                                <h1 className="text-2xl text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
+                                <h1 className="h-[46px] text-2xl align-middle text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
                                     Gains Tracker
                                 </h1>
 
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                <div className="w-1"></div>
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                            </div>
-                            <div className="flex justify-between h-7">
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                <div className="" style={{"width": "160px"}}></div>
-                                <div className="bg-orange-700 ml-2" style={{"width": "12px"}}></div>
-                                <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                {/* right plates */}
+                                <div className="flex justify-between">
+                                    <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                    <div className="w-1"></div>
+                                    <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                    <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
+                                </div>
                             </div>
                         </NavLink>
                     </div>
