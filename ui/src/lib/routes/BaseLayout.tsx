@@ -22,6 +22,8 @@ export default function BaseLayout({children}: Props) {
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
                                     <div className="w-1"></div>
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="w-1"></div>
+                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
                                 </div>
 
                                 <h1 className="h-[46px] text-2xl align-middle text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
@@ -33,6 +35,8 @@ export default function BaseLayout({children}: Props) {
                                     <div className="bg-orange-700" style={{"width": "12px"}}></div>
                                     <div className="w-1"></div>
                                     <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                    <div className="w-1"></div>
+                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
                                     <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
                                 </div>
                             </div>
