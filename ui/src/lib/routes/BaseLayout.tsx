@@ -20,9 +20,9 @@ export default function BaseLayout({children}: Props) {
                                 <div className="flex justify-between">
                                     <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
-                                    <div className="w-1"></div>
+                                    <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
-                                    <div className="w-1"></div>
+                                    <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
                                 </div>
 
@@ -33,9 +33,9 @@ export default function BaseLayout({children}: Props) {
                                 {/* right plates */}
                                 <div className="flex justify-between">
                                     <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                    <div className="w-1"></div>
+                                    <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
                                     <div className="bg-orange-700" style={{"width": "12px"}}></div>
-                                    <div className="w-1"></div>
+                                    <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
                                     <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
                                     <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
                                 </div>
