@@ -1,7 +1,7 @@
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
     line-height: 1.5;
-    color: #222;
+    color: var(--color-typography);
 }
 
 a, a:visited {
@@ -11,6 +11,10 @@ a, a:visited {
     &:hover {
         color: var(--color-anchors-hover);
     }
+}
+
+.logo-header {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .loader {

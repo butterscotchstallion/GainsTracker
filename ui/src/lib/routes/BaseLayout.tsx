@@ -13,16 +13,26 @@ export default function BaseLayout({children}: Props) {
         <>
             <div className="flex items-stretch bg-secondary w-full">
                 <header className="w-full p-4 bg-secondary">
-                    <div className="w-32 content-center inline-block">
+                    <div className="content-center inline-block">
                         <NavLink to="/" end>
-                            <img src={"images/logo.png"} className="border-0" alt="Gains Tracker" width="250"
-                                 height="150"/>
+                            <div className="flex justify-between">
+                                <div className="bg-white w-3"></div>
+                                <h1 className="text-2xl text-white capitalize logo-header border-b-8 border-solid border-white pl-3 pr-3">
+                                    Gains Tracker
+                                </h1>
+                                <div className="bg-white w-3"></div>
+                            </div>
+                            <div className="flex justify-between h-7">
+                                <div className="bg-white w-3"></div>
+                                <div className="w-32"></div>
+                                <div className="bg-white w-3"></div>
+                            </div>
                         </NavLink>
                     </div>
                 </header>
             </div>
-            <main className="bg-slate-300 w-full h-screen">
-                <div className="flex bg-slate-300">
+            <main className="bg-background w-full h-screen">
+                <div className="flex bg-background">
                     <menu className="flex-none h-screen">
                         <li className="p-4">
                             <NavLink to="/schedule" end>

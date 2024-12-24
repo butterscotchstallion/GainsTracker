@@ -30,6 +30,7 @@ export default {
             colors: {
                 primary: 'var(--color-primary)',
                 secondary: 'var(--color-secondary)',
+                background: 'var(--color-background)',
                 buttons: 'var(--color-buttons)',
                 typography: 'var(--color-typography)',
                 anchors: 'var(--color-anchors)',
