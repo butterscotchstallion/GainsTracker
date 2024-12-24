@@ -1,0 +1,12 @@
+html[data-theme="verdant"] {
+  --color-background: #97B196;
+  --color-primary: #3A5C39;
+  --color-secondary: #6B866A;
+  --color-buttons: #97DB95;
+  --color-buttons-text: #222;
+  --color-typography: #222;
+  --color-anchors: #3A5C39;
+  --color-anchors-hover: var(--color-primary);
+  --color-logo-text: var(--color-primary);
+  --color-logo-plates: var(--color-primary);
+}

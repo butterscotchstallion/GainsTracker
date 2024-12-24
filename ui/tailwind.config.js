@@ -35,6 +35,7 @@ export default {
                 typography: 'var(--color-typography)',
                 anchors: 'var(--color-anchors)',
                 anchorsHover: 'var(--color-anchors-hover)',
+                logoPlates: 'var(--color-logo-plates)',
 
                 main: '#88aaee',
                 mainAccent: '#4d80e6', // not needed for shadcn components

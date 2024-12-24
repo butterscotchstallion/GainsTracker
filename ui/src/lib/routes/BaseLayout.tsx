@@ -1,29 +1,33 @@
 import {NavLink} from "react-router";
 import Button from "../components/Button.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCalendarDays, faDumbbell, faRectangleList} from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import {faCalendarDays, faDumbbell, faPalette, faRectangleList} from "@fortawesome/free-solid-svg-icons";
+import React, {ChangeEvent} from "react";
 
 type Props = {
     children: React.ReactNode
+}
+
+function changeTheme(event: ChangeEvent<HTMLSelectElement>) {
+    document.querySelector("html")?.setAttribute("data-theme", event.target.value);
 }
 
 export default function BaseLayout({children}: Props) {
     return (
         <>
             <div className="flex items-stretch bg-secondary w-full">
-                <header className="w-full p-4 bg-secondary">
-                    <div className="content-center inline-block">
+                <header className="w-full p-4 bg-secondary flex justify-between">
+                    <div className="content-center">
                         <NavLink to="/" end>
                             <div className="flex h-20">
                                 {/* left plates */}
                                 <div className="flex justify-between">
                                     <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
-                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates h-full" style={{"width": "12px"}}></div>
                                     <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
-                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates h-full" style={{"width": "12px"}}></div>
                                     <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
-                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates h-full" style={{"width": "12px"}}></div>
                                 </div>
 
                                 <h1 className="h-[46px] text-2xl align-middle text-[var(--color-logo-text)] logo-header border-b-8 border-solid border-black pl-3 pr-3">
@@ -32,15 +36,24 @@ export default function BaseLayout({children}: Props) {
 
                                 {/* right plates */}
                                 <div className="flex justify-between">
-                                    <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates" style={{"width": "12px"}}></div>
                                     <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
-                                    <div className="bg-orange-700" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates" style={{"width": "12px"}}></div>
                                     <div className="w-1 bg-black h-[8px] mt-[37px] align-middle"></div>
-                                    <div className="bg-orange-700 h-full" style={{"width": "12px"}}></div>
+                                    <div className="bg-logoPlates h-full" style={{"width": "12px"}}></div>
                                     <div className="w-5 bg-black h-[8px] mt-[37px] align-middle"></div>
                                 </div>
                             </div>
                         </NavLink>
+                    </div>
+                    <div>
+                        <label htmlFor="theme-selector" className="text-white block mb-1">
+                            <FontAwesomeIcon icon={faPalette}/>&nbsp; Theme
+                        </label>
+                        <select onChange={changeTheme} id="theme-selector" className="block bg-secondary text-white">
+                            <option value="plum">Plum</option>
+                            <option value="verdant">verdant</option>
+                        </select>
                     </div>
                 </header>
             </div>

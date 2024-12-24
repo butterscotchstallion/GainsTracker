@@ -1,4 +1,4 @@
-html[data-theme="purple"] {
+html[data-theme="plum"] {
   --color-background: rgb(148 163 184 / var(--tw-bg-opacity, 1));
   --color-primary: #8A43B1;
   --color-secondary: #2F2733;
@@ -8,4 +8,5 @@ html[data-theme="purple"] {
   --color-anchors: #9F2FDB;
   --color-anchors-hover: var(--color-buttons);
   --color-logo-text: #DBA132;
+  --color-logo-plates: rgb(194 65 12 / var(--tw-bg-opacity, 1));
 }
