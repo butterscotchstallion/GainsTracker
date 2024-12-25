@@ -1,4 +1,6 @@
 from django.urls import include, path
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import routers, serializers, viewsets
 
 from exercises.models import Exercise
@@ -6,15 +8,17 @@ from programs.models import Program
 from schedules.models import ExerciseWeights, Schedule, ScheduleExercise
 from sessions.models import Session
 
+ONE_WEEK_IN_SECONDS = 604800
+CACHE_TIMEOUT = ONE_WEEK_IN_SECONDS
 
-# Serializers define the API representation.
+
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Program
         fields = ["program_name", "pub_date"]
 
 
-# ViewSets define the view behavior.
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class ProgramViewSet(viewsets.ModelViewSet):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
@@ -26,6 +30,7 @@ class ExerciseSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["exercise_name"]
 
 
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
@@ -38,6 +43,7 @@ class SessionSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["pub_date", "num_repetitions", "num_sets", "program"]
 
 
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class SessionViewSet(viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
@@ -50,6 +56,7 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "pub_date", "program", "day_of_week", "schedule_name"]
 
 
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
@@ -67,6 +74,7 @@ class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class ScheduleExerciseViewSet(viewsets.ModelViewSet):
     queryset = ScheduleExercise.objects.all()
     serializer_class = ScheduleExerciseSerializer
@@ -79,6 +87,7 @@ class ExerciseWeightsSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["schedule_name", "weight", "last_modified", "exercise_name"]
 
 
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
 class ExerciseWeightsViewSet(viewsets.ModelViewSet):
     queryset = ExerciseWeights.objects.all()
     serializer_class = ExerciseWeightsSerializer

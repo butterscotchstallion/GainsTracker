@@ -113,6 +113,7 @@ export default function SchedulePage() {
                 displaySchedules.push(displaySchedule);
             });
             setSchedules(displaySchedules);
+            console.info("Loaded schedule data");
         }).catch(console.error);
     }
 
