@@ -3,9 +3,10 @@ import {ExerciseWeights, Schedule, ScheduleExercise} from "../components/api/gen
 import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format, isPast} from "date-fns";
-import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
-import {faCalendarDay} from "@fortawesome/free-solid-svg-icons";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../components/Card.tsx";
+import {faCalendarDay, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Button from "../components/Button.tsx";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -71,6 +72,11 @@ export default function SchedulePage() {
         return scheduleExerciseWeightMap;
     }
 
+    function isToday(dayOfWeek: number): boolean {
+        const currentDay: Date = getDateFromDayOfWeek(dayOfWeek);
+        return currentDay.toDateString() === new Date().toDateString();
+    }
+
     function getFirstDayOfWeek(): Date {
         const curDate = new Date();
         const first: number = curDate.getDate() - curDate.getDay();
@@ -124,7 +130,11 @@ export default function SchedulePage() {
     }
 
     function getDateHeader(dayOfWeek: number): string {
-        return format(daysOfCurrentWeek[dayOfWeek], "EEEE, MMM dd");
+        return format(getDateFromDayOfWeek(dayOfWeek), "EEEE, MMM dd");
+    }
+
+    function getDateFromDayOfWeek(dayOfWeek: number): Date {
+        return daysOfCurrentWeek[dayOfWeek];
     }
 
     useEffect(loadData, []);
@@ -174,6 +184,18 @@ export default function SchedulePage() {
                                 </table>
                             ) : 'No exercises found.'}
                         </CardContent>
+                        {isToday(schedule.day_of_week) ? (
+                            <>
+                                <CardFooter>
+                                    <div className="flex items-center justify-end w-full">
+                                        <Button className="flex items-center">
+                                            <FontAwesomeIcon icon={faSquarePlus}/>
+                                            &nbsp;Start Session
+                                        </Button>
+                                    </div>
+                                </CardFooter>
+                            </>
+                        ) : ''}
                     </Card>
                 ))}
             </main>
