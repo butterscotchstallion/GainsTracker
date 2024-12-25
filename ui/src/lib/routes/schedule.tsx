@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {ExerciseWeights, Schedule, ScheduleExercise} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
-import {addDays, format} from "date-fns";
+import {addDays, format, isPast} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "../components/Card.tsx";
 import {faCalendarDay} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -106,14 +106,20 @@ export default function SchedulePage() {
              * This is done because the original model doesn't have exercises
              */
             s.forEach((schedule: Schedule) => {
-                const displaySchedule: IDisplaySchedule = {
-                    ...schedule,
-                    exercises: scheduleIdExerciseMap.get(schedule.schedule_name)!,
-                };
-                displaySchedules.push(displaySchedule);
+                const scheduleDate: Date = daysOfCurrentWeek[schedule.day_of_week];
+                // Set time to 2200 because at this point we're probably not doing any more work outs
+                scheduleDate.setHours(22, 0, 0, 0);
+                const isScheduledDayInPast = isPast(scheduleDate);
+                if (!isScheduledDayInPast) {
+                    const displaySchedule: IDisplaySchedule = {
+                        ...schedule,
+                        exercises: scheduleIdExerciseMap.get(schedule.schedule_name)!,
+                    };
+                    displaySchedules.push(displaySchedule);
+                }
             });
             setSchedules(displaySchedules);
-            console.info("Loaded schedule data");
+            console.info("Loaded data");
         }).catch(console.error);
     }
 
