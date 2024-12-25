@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react'
 import {createRoot} from 'react-dom/client'
-import './index.scss'
+import './styles/index.scss'
 import App from './App.tsx'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router'
 import Throbber from "./lib/components/Throbber.tsx";
