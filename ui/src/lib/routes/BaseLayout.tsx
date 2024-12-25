@@ -1,7 +1,7 @@
 import {NavLink} from "react-router";
 import Button from "../components/Button.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCalendarDays, faDumbbell, faPalette, faRectangleList} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarDays, faDumbbell, faRectangleList} from "@fortawesome/free-solid-svg-icons";
 import React, {ChangeEvent} from "react";
 import {changeTheme} from "../components/themeSwitcher.ts";
 
@@ -48,14 +48,11 @@ export default function BaseLayout({children}: Props) {
                         </NavLink>
                     </div>
                     <div>
-                        <label htmlFor="theme-selector" className="text-white block mb-1">
-                            <FontAwesomeIcon icon={faPalette}/>&nbsp; Theme
-                        </label>
-                        <select onChange={changeThemeFromSelect} id="theme-selector"
-                                className="block bg-secondary text-white">
-                            <option value="plum">Plum</option>
-                            <option value="verdant">Verdant</option>
-                            <option value="fall">Fall</option>
+                        <select onChange={changeThemeFromSelect} className="block bg-secondary text-white">
+                            <option value="plum">Theme: Plum</option>
+                            <option value="verdant">Theme: Verdant</option>
+                            <option value="fall">Theme: Fall</option>
+                            <option value="sky-captain">Theme: Sky Captain</option>
                         </select>
                     </div>
                 </header>
