@@ -13,9 +13,13 @@ a, a:visited {
     }
 }
 
-.gt-header {
+.gt-header-font {
     font-family: "Trade Gothic Condensed", Impact, "Franklin Gothic Bold", sans-serif;
     text-transform: uppercase;
+}
+
+.gt-header-color {
+    color: var(--color-typography);
 }
 
 .loader {

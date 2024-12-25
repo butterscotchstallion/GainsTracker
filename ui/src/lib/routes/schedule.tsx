@@ -107,7 +107,7 @@ export default function SchedulePage() {
              */
             s.forEach((schedule: Schedule) => {
                 const scheduleDate: Date = daysOfCurrentWeek[schedule.day_of_week];
-                // Set time to 2200 because at this point we're probably not doing any more work outs
+                // Set time to 2200 because at this point we're probably not doing any more work-outs
                 scheduleDate.setHours(22, 0, 0, 0);
                 const isScheduledDayInPast = isPast(scheduleDate);
                 if (!isScheduledDayInPast) {
@@ -131,7 +131,7 @@ export default function SchedulePage() {
 
     return (
         <>
-            <h1 className="gt-header">Schedule</h1>
+            <h1 className="gt-header-font gt-header-color">Schedule</h1>
             <main className="max-w-lg md:max-w-2xl">
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="mt-3">

@@ -1,13 +1,13 @@
 html[data-theme="fall"] {
-  --color-background: #331400;
+  --color-background: #e1c4b2;
   --color-primary: #804826;
-  --color-secondary: #D67130;
+  --color-secondary: #331400;
   --color-buttons: #AA724F;
   --color-buttons-text: #fff;
-  --color-typography: #fff;
-  --color-card-text: #fff;
+  --color-typography: #331400;
+  --color-card-text: #E1C4B2FF;
   --color-anchors: #fff;
   --color-anchors-hover: #fff;
-  --color-logo-text: #222;
+  --color-logo-text: var(--color-background);
   --color-logo-plates: #55280B;
 }
