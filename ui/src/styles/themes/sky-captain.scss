@@ -2,12 +2,12 @@ html[data-theme="sky-captain"] {
   --color-background: #001F33;
   --color-primary: #0E3A57;
   --color-secondary: #265C80;
-  --color-buttons: #4F86AA;
+  --color-buttons: #b2d3ea;
   --color-buttons-text: #222;
-  --color-typography: #fff;
-  --color-card-text: #fff;
-  --color-anchors: #fff;
-  --color-anchors-hover: #fff;
-  --color-logo-text: #fff;
+  --color-typography: #b2d3ea;
+  --color-card-text: var(--color-background);
+  --color-anchors: var(--color-background);
+  --color-anchors-hover: #b2d3ea;
+  --color-logo-text: #b2d3ea;
   --color-logo-plates: var(--color-buttons);
 }
