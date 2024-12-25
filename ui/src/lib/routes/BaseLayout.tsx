@@ -53,6 +53,7 @@ export default function BaseLayout({children}: Props) {
                             <option value="verdant">Theme: Verdant</option>
                             <option value="fall">Theme: Fall</option>
                             <option value="sky-captain">Theme: Sky Captain</option>
+                            <option value="wine">Theme: Wine</option>
                         </select>
                     </div>
                 </header>
