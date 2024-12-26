@@ -8,12 +8,14 @@ import React from "react";
 type Props = {
     className?: ClassValue,
     children: React.ReactNode,
-    variant?: string
+    variant?: string,
+    onClick?: () => void,
 }
 
-export default function Button({className, children}: Props) {
+export default function Button({className, children, onClick}: Props) {
     return (
         <button
+            onClick={onClick}
             role="button"
             aria-label="Click to perform an action"
             className={cn(

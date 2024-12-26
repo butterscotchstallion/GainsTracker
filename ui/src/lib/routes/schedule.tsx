@@ -7,6 +7,7 @@ import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../component
 import {faCalendarDay, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Button from "../components/Button.tsx";
+import CounterButton from "../components/CounterButton/CounterButton.tsx";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -20,6 +21,7 @@ interface IDisplaySchedule extends Schedule {
 }
 
 export default function SchedulePage() {
+    const [isSessionStarted, setIsSessionStarted] = useState<boolean>(false);
     const [schedules, setSchedules] = useState<IDisplaySchedule[]>([]);
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
@@ -73,6 +75,7 @@ export default function SchedulePage() {
     }
 
     function isToday(dayOfWeek: number): boolean {
+        return true;
         const currentDay: Date = getDateFromDayOfWeek(dayOfWeek);
         return currentDay.toDateString() === new Date().toDateString();
     }
@@ -90,6 +93,10 @@ export default function SchedulePage() {
             days.push(addDays(firstDayOfWeek, j));
         }
         return days;
+    }
+
+    function toggleSessionStarted() {
+        setIsSessionStarted(!isSessionStarted);
     }
 
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
@@ -139,6 +146,18 @@ export default function SchedulePage() {
 
     useEffect(loadData, []);
 
+    function getCounterButtonsForSets(sets: number) {
+        return (
+            <ul className="list-none flex justify-between">
+                {[...Array(sets).keys()].map((index: number) => (
+                    <li key={index}>
+                        <CounterButton className="" limit={5} readOnly={false}/>
+                    </li>
+                ))}
+            </ul>
+        )
+    }
+
     return (
         <>
             <h1 className="gt-header-font gt-header-color">Schedule</h1>
@@ -166,7 +185,6 @@ export default function SchedulePage() {
                                         <th className={"text-left"}>Exercise</th>
                                         <th className={"text-left"}>Weight</th>
                                         <th className={"text-left"}>Sets</th>
-                                        <th className={"text-left"}>Repetitions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -175,8 +193,9 @@ export default function SchedulePage() {
                                             <tr key={index}>
                                                 <td width="50%">{exercise.exerciseName}</td>
                                                 <td width="20%">{exercise.weight}</td>
-                                                <td width="20%">{exercise.sets}</td>
-                                                <td width="10%">{exercise.repetitions}</td>
+                                                <td width="30%">
+                                                    {getCounterButtonsForSets(exercise.sets)}
+                                                </td>
                                             </tr>
                                         ))
                                     }
@@ -187,11 +206,27 @@ export default function SchedulePage() {
                         {isToday(schedule.day_of_week) ? (
                             <>
                                 <CardFooter>
-                                    <div className="flex items-center justify-end w-full">
-                                        <Button className="flex items-center">
-                                            <FontAwesomeIcon icon={faSquarePlus}/>
-                                            &nbsp;Start Session
-                                        </Button>
+                                    <div className="flex items-center justify-between w-full">
+                                        <div>
+                                            {
+                                                // timer here
+                                                isSessionStarted ? (
+                                                    <>
+
+                                                    </>
+                                                ) : ''
+                                            }
+                                        </div>
+
+                                        <div className="flex items-center">
+                                            <>
+                                                <Button onClick={toggleSessionStarted}>
+                                                    <FontAwesomeIcon icon={faSquarePlus}/>
+                                                    &nbsp;
+                                                    {isSessionStarted ? "Finish" : "Begin"} Session
+                                                </Button>
+                                            </>
+                                        </div>
                                     </div>
                                 </CardFooter>
                             </>
