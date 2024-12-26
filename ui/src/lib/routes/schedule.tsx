@@ -8,6 +8,7 @@ import {faCalendarDay, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Button from "../components/Button.tsx";
 import CounterButton from "../components/CounterButton/CounterButton.tsx";
+import "./schedule.scss";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -148,10 +149,10 @@ export default function SchedulePage() {
 
     function getCounterButtonsForSets(sets: number) {
         return (
-            <ul className="list-none flex justify-between">
+            <ul className="list-none counter-button-list flex justify-between">
                 {[...Array(sets).keys()].map((index: number) => (
                     <li key={index}>
-                        <CounterButton className="" limit={5} readOnly={false}/>
+                        <CounterButton className="mr-3" limit={5} readOnly={false}/>
                     </li>
                 ))}
             </ul>
@@ -191,9 +192,9 @@ export default function SchedulePage() {
                                     {
                                         schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
                                             <tr key={index}>
-                                                <td width="50%">{exercise.exerciseName}</td>
-                                                <td width="20%">{exercise.weight}</td>
-                                                <td width="30%">
+                                                <td width="30%">{exercise.exerciseName}</td>
+                                                <td width="15%">{exercise.weight}</td>
+                                                <td width="40%" className="pb-4">
                                                     {getCounterButtonsForSets(exercise.sets)}
                                                 </td>
                                             </tr>
