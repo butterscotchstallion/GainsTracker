@@ -11,6 +11,10 @@ class Schedule(models.Model):
     program = models.ForeignKey(Program, null=True, on_delete=models.SET(Program))
     exercises = models.ManyToManyField(Exercise, through="ScheduleExercise")
 
+    @property
+    def program_id(self) -> int:
+        return self.program.id
+
     def __str__(self) -> str:
         return self.schedule_name
 

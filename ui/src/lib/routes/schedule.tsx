@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import {ReactElement, useEffect, useState} from "react";
 import {ExerciseWeights, Schedule, ScheduleExercise} from "../components/api/generated";
 import {AxiosPromise, AxiosResponse} from "axios";
-import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
+import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI, sessionsAPI} from "../components/api/api.ts";
 import {addDays, format, isPast} from "date-fns";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../components/Card.tsx";
 import {faCalendarDay, faGear, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import CounterButton from "../components/CounterButton/CounterButton.tsx";
 import "./schedule.scss";
 import Button from "../components/Button.tsx";
+import {SessionData} from "react-router";
+import {useToast} from '../components/useToast.ts';
+import {ToastAction} from "@radix-ui/react-toast";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -24,9 +27,17 @@ interface IDisplaySchedule extends Schedule {
 export default function SchedulePage() {
     const [isSessionStarted, setIsSessionStarted] = useState<boolean>(false);
     const [schedules, setSchedules] = useState<IDisplaySchedule[]>([]);
+    // Stores exerciseName -> reps/sets/weight
+    const [exerciseNameDetailsMap, setExerciseNameDetailsMap] = useState<Map<string, IExerciseInfo>>();
+    // Start/end used for session data
+    const [sessionStartTime, setSessionStartTime] = useState<Date>();
+    const [sessionEndTime, setSessionEndTime] = useState<Date>();
+    const [programId, setProgramId] = useState<number>();
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
+    const sessionDataMap: Map<string, IExerciseInfo> = new Map();
+    const {toast} = useToast()
 
     /**
      * Each schedule can have different exercises with different weights for each exercise
@@ -41,7 +52,7 @@ export default function SchedulePage() {
             if (scheduleIdExerciseMap.has(scheduleExercise.schedule_name)) {
                 exercises = scheduleIdExerciseMap.get(scheduleExercise.schedule_name);
             }
-            const scheduleMap = exerciseWeightMap.get(scheduleExercise.schedule_name);
+            const scheduleMap: Map<string, number> = exerciseWeightMap.get(scheduleExercise.schedule_name);
             exercises.push({
                 sets: scheduleExercise.num_sets,
                 repetitions: scheduleExercise.num_repetitions,
@@ -75,11 +86,6 @@ export default function SchedulePage() {
         return scheduleExerciseWeightMap;
     }
 
-    function isToday(dayOfWeek: number): boolean {
-        const currentDay: Date = getDateFromDayOfWeek(dayOfWeek);
-        return currentDay.toDateString() === new Date().toDateString();
-    }
-
     function getFirstDayOfWeek(): Date {
         const curDate = new Date();
         const first: number = curDate.getDate() - curDate.getDay();
@@ -95,10 +101,6 @@ export default function SchedulePage() {
         return days;
     }
 
-    function toggleSessionStarted() {
-        setIsSessionStarted(!isSessionStarted);
-    }
-
     const daysOfCurrentWeek: Date[] = getDaysOfCurrentWeek();
     const displaySchedules: IDisplaySchedule[] = [];
 
@@ -112,6 +114,9 @@ export default function SchedulePage() {
             const se: ScheduleExercise[] = results[1].data;
             const ex: ExerciseWeights[] = results[2].data;
 
+            // programId should be the same for all exercises
+            setProgramId(parseInt(s[0].program_id, 10));
+
             let scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = getScheduleIdExerciseMap(se, ex);
 
             /**
@@ -120,7 +125,7 @@ export default function SchedulePage() {
              */
             s.forEach((schedule: Schedule) => {
                 const scheduleDate: Date = daysOfCurrentWeek[schedule.day_of_week];
-                // Set time to 2200 because at this point we're probably not doing any more work-outs
+                // Set time to 2200 because at this point we're probably not doing more work-outs
                 scheduleDate.setHours(22, 0, 0, 0);
                 const isScheduledDayInPast = isPast(scheduleDate);
                 if (!isScheduledDayInPast) {
@@ -144,23 +149,61 @@ export default function SchedulePage() {
         return daysOfCurrentWeek[dayOfWeek];
     }
 
-    useEffect(loadData, []);
+    function updateSessionData(scheduleExercise: IExerciseInfo): void {
+        sessionDataMap.set(scheduleExercise.exerciseName, scheduleExercise);
+        setExerciseNameDetailsMap(sessionDataMap);
+        setIsSessionStarted(true);
+        console.log("Updated session data");
+    }
 
-    function getCounterButtonsForSets(sets: number, repetitions: number) {
+    function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
         return (
             <ul className="list-none counter-button-list flex justify-between">
-                {[...Array(sets).keys()].map((index: number) => (
+                {[...Array(scheduleExercise.sets).keys()].map((index: number) => (
                     <li key={index}>
-                        <CounterButton className="mr-3" limit={repetitions} readOnly={false}/>
+                        <CounterButton onClick={() => updateSessionData(scheduleExercise)}
+                                       className="mr-3"
+                                       limit={scheduleExercise.repetitions}
+                                       readOnly={false}/>
                     </li>
                 ))}
             </ul>
         )
     }
 
-    function finishSession() {
-
+    /**
+     * Save sessionData
+     * 1. Save program, start_timestamp, end_timestamp
+     * 2. Insert row into session_exercise containing set/reps/weight info
+     * for each exercise
+     */
+    function onSessionFinish() {
+        setSessionEndTime(new Date());
     }
+
+    /**
+     * Saves program, start time, end time.
+     * Resulting session id is used to save the sessionExercise data
+     */
+    function saveSessionData() {
+        console.log(`Saving session data: start=${sessionStartTime}, end=${sessionEndTime}, programId=${programId}`);
+        const sessionData: SessionData = {
+            start_timestamp: sessionStartTime,
+            end_timestamp: sessionEndTime,
+            program_id: programId,
+        };
+        sessionsAPI.sessionsCreate(sessionData).then(_ => {
+            console.info("Session info saved");
+        }).catch((error) => {
+            toast({
+                title: "Error saving session",
+                description: "There was a problem: " + error,
+                action: <ToastAction altText="">OK</ToastAction>,
+            });
+        });
+    }
+
+    useEffect(loadData, []);
 
     return (
         <>
@@ -200,7 +243,7 @@ export default function SchedulePage() {
                                                     <FontAwesomeIcon icon={faGear}/>&nbsp; {exercise.weight}
                                                 </td>
                                                 <td width="40%" className="pb-4">
-                                                    {getCounterButtonsForSets(exercise.sets, exercise.repetitions)}
+                                                    {getCounterButtonsForSets(exercise)}
                                                 </td>
                                             </tr>
                                         ))
@@ -226,7 +269,7 @@ export default function SchedulePage() {
 
                                         <div className="flex items-center">
                                             <>
-                                                <Button onClick={finishSession}>
+                                                <Button onClick={onSessionFinish}>
                                                     <FontAwesomeIcon icon={faSquarePlus}/>
                                                     &nbsp; Finish Session
                                                 </Button>

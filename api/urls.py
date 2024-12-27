@@ -40,7 +40,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Session
-        fields = ["start_timestamp", "end_timestamp", "program"]
+        fields = ["start_timestamp", "end_timestamp", "program_id"]
 
 
 @method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
@@ -53,7 +53,7 @@ class SessionViewSet(viewsets.ModelViewSet):
 class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
-        fields = ["id", "pub_date", "program", "day_of_week", "schedule_name"]
+        fields = ["id", "pub_date", "program_id", "day_of_week", "schedule_name"]
 
 
 @method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")

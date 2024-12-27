@@ -1,11 +1,12 @@
-import {useState} from "react";
+import {ReactElement, useState} from "react";
 import "./CounterButton";
 import {cn} from "../../utils.ts";
 
 type ButtonProps = {
     className?: string,
     limit?: number,
-    readOnly?: false
+    readOnly?: false,
+    onClick: Function,
 }
 
 /**
@@ -13,13 +14,18 @@ type ButtonProps = {
  * - Increment
  * @constructor
  */
-export default function CounterButton({readOnly = false, className = '', limit = 5}: ButtonProps) {
+export default function CounterButton({
+                                          readOnly = false,
+                                          className = '',
+                                          limit = 5,
+                                          onClick
+                                      }: ButtonProps): ReactElement {
     const inactiveBgColor: string = "bg-[var(--color-background)]";
     const activeBgColor: string = "bg-[var(--color-primary)]";
     const [countValue, setCountValue] = useState(0);
     const [bgColor, setBgColor] = useState(inactiveBgColor);
 
-    function onClick() {
+    function updateCountValue() {
         if (readOnly) {
             console.info("CounterButton: readonly mode")
             return;
@@ -34,11 +40,13 @@ export default function CounterButton({readOnly = false, className = '', limit =
             setCountValue(0);
             setBgColor(inactiveBgColor);
         }
+
+        onClick();
     }
 
     return (
         <button
             className={cn("counter-button rounded-full text-[var(--color-typography)] p-3", bgColor, className)}
-            onClick={onClick}>{countValue}</button>
+            onClick={updateCountValue}>{countValue}</button>
     );
 }

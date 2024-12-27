@@ -109,7 +109,7 @@ export interface Schedule {
      * @type {string}
      * @memberof Schedule
      */
-    'program'?: string | null;
+    'program_id'?: string;
     /**
      * 
      * @type {number}
@@ -183,7 +183,7 @@ export interface Session {
      * @type {string}
      * @memberof Session
      */
-    'program'?: string | null;
+    'program_id'?: string;
 }
 /**
  * 

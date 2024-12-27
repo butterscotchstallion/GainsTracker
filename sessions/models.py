@@ -13,6 +13,10 @@ class Session(models.Model):
     start_timestamp = models.DateTimeField(null=True, auto_now_add=True)
     end_timestamp = models.DateTimeField(null=True)
 
+    @property
+    def program_id(self) -> int:
+        return self.program.id
+
     class Meta:
         db_table = "gt_sessions_session"
 
