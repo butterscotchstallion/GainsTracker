@@ -28,6 +28,10 @@ class ScheduleExercise(models.Model):
         return self.exercise.exercise_name
 
     @property
+    def exercise_id(self) -> int:
+        return self.exercise.id
+
+    @property
     def schedule_name(self) -> str:
         return self.schedule.schedule_name
 

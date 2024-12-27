@@ -153,6 +153,12 @@ export interface ScheduleExercise {
      * @memberof ScheduleExercise
      */
     'schedule_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ScheduleExercise
+     */
+    'exercise_id'?: string;
 }
 /**
  * 
@@ -165,25 +171,56 @@ export interface Session {
      * @type {string}
      * @memberof Session
      */
-    'pub_date': string;
+    'start_timestamp'?: string | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Session
      */
-    'num_repetitions': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Session
-     */
-    'num_sets': number;
+    'end_timestamp'?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Session
      */
     'program'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface SessionExercises
+ */
+export interface SessionExercises {
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionExercises
+     */
+    'exercise_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionExercises
+     */
+    'session_id'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SessionExercises
+     */
+    'num_repetitions': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SessionExercises
+     */
+    'num_sets': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SessionExercises
+     */
+    'weight': number;
 }
 
 /**
@@ -2511,6 +2548,472 @@ export class SchedulesApi extends BaseAPI {
      */
     public schedulesUpdate(id: number, data: Schedule, options?: RawAxiosRequestConfig) {
         return SchedulesApiFp(this.configuration).schedulesUpdate(id, data, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * SessionExercisesApi - axios parameter creator
+ * @export
+ */
+export const SessionExercisesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesCreate: async (data: SessionExercises, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'data' is not null or undefined
+            assertParamExists('sessionExercisesCreate', 'data', data)
+            const localVarPath = `/session-exercises/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesDelete: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('sessionExercisesDelete', 'id', id)
+            const localVarPath = `/session-exercises/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/session-exercises/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesPartialUpdate: async (id: number, data: SessionExercises, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('sessionExercisesPartialUpdate', 'id', id)
+            // verify required parameter 'data' is not null or undefined
+            assertParamExists('sessionExercisesPartialUpdate', 'data', data)
+            const localVarPath = `/session-exercises/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesRead: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('sessionExercisesRead', 'id', id)
+            const localVarPath = `/session-exercises/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesUpdate: async (id: number, data: SessionExercises, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('sessionExercisesUpdate', 'id', id)
+            // verify required parameter 'data' is not null or undefined
+            assertParamExists('sessionExercisesUpdate', 'data', data)
+            const localVarPath = `/session-exercises/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Basic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * SessionExercisesApi - functional programming interface
+ * @export
+ */
+export const SessionExercisesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = SessionExercisesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesCreate(data: SessionExercises, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionExercises>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesCreate(data, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesDelete(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesDelete(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SessionExercises>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesList(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesPartialUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionExercises>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesPartialUpdate(id, data, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesPartialUpdate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesRead(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionExercises>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesRead(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesRead']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sessionExercisesUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionExercises>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionExercisesUpdate(id, data, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SessionExercisesApi.sessionExercisesUpdate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * SessionExercisesApi - factory interface
+ * @export
+ */
+export const SessionExercisesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = SessionExercisesApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesCreate(data: SessionExercises, options?: RawAxiosRequestConfig): AxiosPromise<SessionExercises> {
+            return localVarFp.sessionExercisesCreate(data, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesDelete(id: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.sessionExercisesDelete(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesList(options?: RawAxiosRequestConfig): AxiosPromise<Array<SessionExercises>> {
+            return localVarFp.sessionExercisesList(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesPartialUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig): AxiosPromise<SessionExercises> {
+            return localVarFp.sessionExercisesPartialUpdate(id, data, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesRead(id: number, options?: RawAxiosRequestConfig): AxiosPromise<SessionExercises> {
+            return localVarFp.sessionExercisesRead(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id A unique integer value identifying this session exercise.
+         * @param {SessionExercises} data 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sessionExercisesUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig): AxiosPromise<SessionExercises> {
+            return localVarFp.sessionExercisesUpdate(id, data, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * SessionExercisesApi - object-oriented interface
+ * @export
+ * @class SessionExercisesApi
+ * @extends {BaseAPI}
+ */
+export class SessionExercisesApi extends BaseAPI {
+    /**
+     * 
+     * @param {SessionExercises} data 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesCreate(data: SessionExercises, options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesCreate(data, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id A unique integer value identifying this session exercise.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesDelete(id: number, options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesDelete(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesList(options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesList(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id A unique integer value identifying this session exercise.
+     * @param {SessionExercises} data 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesPartialUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesPartialUpdate(id, data, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id A unique integer value identifying this session exercise.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesRead(id: number, options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesRead(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id A unique integer value identifying this session exercise.
+     * @param {SessionExercises} data 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SessionExercisesApi
+     */
+    public sessionExercisesUpdate(id: number, data: SessionExercises, options?: RawAxiosRequestConfig) {
+        return SessionExercisesApiFp(this.configuration).sessionExercisesUpdate(id, data, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -6,7 +6,7 @@ from rest_framework import routers, serializers, viewsets
 from exercises.models import Exercise
 from programs.models import Program
 from schedules.models import ExerciseWeights, Schedule, ScheduleExercise
-from sessions.models import Session
+from sessions.models import Session, SessionExercise
 
 ONE_WEEK_IN_SECONDS = 604800
 CACHE_TIMEOUT = ONE_WEEK_IN_SECONDS
@@ -40,7 +40,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Session
-        fields = ["pub_date", "num_repetitions", "num_sets", "program"]
+        fields = ["start_timestamp", "end_timestamp", "program"]
 
 
 @method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
@@ -71,6 +71,7 @@ class ScheduleExerciseSerializer(serializers.HyperlinkedModelSerializer):
             "num_sets",
             "exercise_name",
             "schedule_name",
+            "exercise_id",
         ]
 
 
@@ -93,6 +94,19 @@ class ExerciseWeightsViewSet(viewsets.ModelViewSet):
     serializer_class = ExerciseWeightsSerializer
 
 
+# SessionExercises
+class SessionExercisesSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SessionExercise
+        fields = ["exercise_id", "session_id", "num_repetitions", "num_sets", "weight"]
+
+
+@method_decorator(cache_page(CACHE_TIMEOUT), "dispatch")
+class SessionExercisesViewSet(viewsets.ModelViewSet):
+    queryset = SessionExercise.objects.all()
+    serializer_class = SessionExercisesSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r"programs", ProgramViewSet)
 router.register(r"exercises", ExerciseViewSet)
@@ -100,7 +114,7 @@ router.register(r"sessions", SessionViewSet)
 router.register(r"schedules", ScheduleViewSet)
 router.register(r"schedule-exercises", ScheduleExerciseViewSet)
 router.register(r"exercise-weights", ExerciseWeightsViewSet)
-
+router.register(r"session-exercises", SessionExercisesViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
