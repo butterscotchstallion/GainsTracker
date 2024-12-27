@@ -4,11 +4,11 @@ import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI} from "../components/api/api.ts";
 import {addDays, format, isPast} from "date-fns";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../components/Card.tsx";
-import {faCalendarDay, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarDay, faGear, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import Button from "../components/Button.tsx";
 import CounterButton from "../components/CounterButton/CounterButton.tsx";
 import "./schedule.scss";
+import Button from "../components/Button.tsx";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -76,7 +76,6 @@ export default function SchedulePage() {
     }
 
     function isToday(dayOfWeek: number): boolean {
-        return true;
         const currentDay: Date = getDateFromDayOfWeek(dayOfWeek);
         return currentDay.toDateString() === new Date().toDateString();
     }
@@ -147,22 +146,26 @@ export default function SchedulePage() {
 
     useEffect(loadData, []);
 
-    function getCounterButtonsForSets(sets: number) {
+    function getCounterButtonsForSets(sets: number, repetitions: number) {
         return (
             <ul className="list-none counter-button-list flex justify-between">
                 {[...Array(sets).keys()].map((index: number) => (
                     <li key={index}>
-                        <CounterButton className="mr-3" limit={5} readOnly={false}/>
+                        <CounterButton className="mr-3" limit={repetitions} readOnly={false}/>
                     </li>
                 ))}
             </ul>
         )
     }
 
+    function finishSession() {
+
+    }
+
     return (
         <>
             <h1 className="gt-header-font gt-header-color">Schedule</h1>
-            <main className="max-w-lg md:max-w-2xl">
+            <main className="max-w-xl md:max-w-2xl">
                 {schedules.map((schedule: IDisplaySchedule, index: number) => (
                     <Card key={index} className="mt-3">
                         <CardHeader>
@@ -193,9 +196,11 @@ export default function SchedulePage() {
                                         schedule.exercises.map((exercise: IExerciseInfo, index: number) => (
                                             <tr key={index}>
                                                 <td width="30%">{exercise.exerciseName}</td>
-                                                <td width="15%">{exercise.weight}</td>
+                                                <td width="15%">
+                                                    <FontAwesomeIcon icon={faGear}/>&nbsp; {exercise.weight}
+                                                </td>
                                                 <td width="40%" className="pb-4">
-                                                    {getCounterButtonsForSets(exercise.sets)}
+                                                    {getCounterButtonsForSets(exercise.sets, exercise.repetitions)}
                                                 </td>
                                             </tr>
                                         ))
@@ -204,7 +209,7 @@ export default function SchedulePage() {
                                 </table>
                             ) : 'No exercises found.'}
                         </CardContent>
-                        {isToday(schedule.day_of_week) ? (
+                        {isSessionStarted ? (
                             <>
                                 <CardFooter>
                                     <div className="flex items-center justify-between w-full">
@@ -221,10 +226,9 @@ export default function SchedulePage() {
 
                                         <div className="flex items-center">
                                             <>
-                                                <Button onClick={toggleSessionStarted}>
+                                                <Button onClick={finishSession}>
                                                     <FontAwesomeIcon icon={faSquarePlus}/>
-                                                    &nbsp;
-                                                    {isSessionStarted ? "Finish" : "Begin"} Session
+                                                    &nbsp; Finish Session
                                                 </Button>
                                             </>
                                         </div>
