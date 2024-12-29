@@ -6,7 +6,7 @@ type ButtonProps = {
     className?: string,
     limit?: number,
     readOnly?: false,
-    onClick: Function,
+    onClickCallback: Function,
 }
 
 /**
@@ -18,7 +18,7 @@ export default function CounterButton({
                                           readOnly = false,
                                           className = '',
                                           limit = 5,
-                                          onClick
+                                          onClickCallback
                                       }: ButtonProps): ReactElement {
     const inactiveBgColor: string = "bg-[var(--color-background)]";
     const activeBgColor: string = "bg-[var(--color-primary)]";
@@ -41,7 +41,7 @@ export default function CounterButton({
             setBgColor(inactiveBgColor);
         }
 
-        onClick();
+        onClickCallback();
     }
 
     return (
