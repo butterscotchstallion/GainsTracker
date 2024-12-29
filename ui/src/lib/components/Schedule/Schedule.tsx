@@ -7,11 +7,12 @@ import Button from "../Button.tsx";
 import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI, sessionsAPI} from "../api/api.ts";
 import {useToast} from "../useToast.ts";
-import {addDays, addWeeks, format, isPast} from "date-fns";
+import {isPast} from "date-fns";
 import CounterButton from "../CounterButton/CounterButton.tsx";
 import {ToastAction} from "@radix-ui/react-toast";
-import {SessionData} from "react-router";
+
 import "./schedule.scss";
+import {getDateHeader, getNextScheduledWeek, isTodayAfterLastScheduledDay} from "./dateUtils.ts";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -21,7 +22,8 @@ interface IExerciseInfo {
 }
 
 interface IDisplaySchedule extends Schedule {
-    exercises: IExerciseInfo[]
+    exercises: IExerciseInfo[],
+    dateHeader: string,
 }
 
 interface IExerciseInfo {
@@ -97,68 +99,6 @@ export default function ScheduleComponent(): ReactElement {
         return scheduleExerciseWeightMap;
     }
 
-    function getFirstDayOfWeek(): Date {
-        const curDate: Date = new Date();
-        const first: number = curDate.getDate() - curDate.getDay();
-        return new Date(curDate.setDate(first));
-    }
-
-    function getNextScheduledWeek(shouldAddWeek: boolean = false): Date[] {
-        let firstDayOfWeek: Date = getFirstDayOfWeek();
-
-        if (shouldAddWeek) {
-            firstDayOfWeek = addWeeks(firstDayOfWeek, 1);
-        }
-
-        const days: Date[] = [];
-        for (let j = 0; j < 7; j++) {
-            days.push(addDays(firstDayOfWeek, j));
-        }
-
-        return days;
-    }
-
-    function getDaysOfWeekFromSchedules(schedules: Schedule[]): number[] {
-        const days: number[] = [];
-        schedules.forEach((schedule: Schedule) => {
-            days.push(schedule.day_of_week);
-        });
-        return days.sort((a: number, b: number): number => a - b);
-    }
-
-    function getDayNumberFromDayName(dayName: string): number {
-        const dayMap: Map<string, number> = new Map();
-        dayMap.set("Sunday", 0);
-        dayMap.set("Monday", 1);
-        dayMap.set("Tuesday", 2);
-        dayMap.set("Wednesday", 3);
-        dayMap.set("Thursday", 4);
-        dayMap.set("Friday", 5);
-        dayMap.set("Saturday", 6);
-        const dayNumber: number | undefined = dayMap.get(dayName);
-
-        if (!dayNumber) {
-            throw new Error("Invalid day name: " + dayName);
-        }
-
-        return dayNumber;
-    }
-
-    function isTodayAfterLastScheduledDay(schedules: Schedule[]): boolean {
-        const todayNumber: number = getDayNumberFromDayName(format(new Date(), "EEEE"));
-        const days: number[] = getDaysOfWeekFromSchedules(schedules);
-        const lastDayOfSchedule: number = days[days.length - 1];
-        return todayNumber > lastDayOfSchedule;
-    }
-
-    function getDayNumberDateMap(schedules: Schedule[]): Map<number, string> {
-        const dayNumberDateMap: Map<number, string> = new Map();
-        schedules.forEach((schedule: Schedule) => {
-            dayNumberDateMap.set(schedule.day_of_week, format(getDateFromDayOfWeek(schedule.day_of_week), "EEEE, MMM dd"));
-        });
-        return dayNumberDateMap;
-    }
-
     let daysOfNextScheduledSessions: Date[] = getNextScheduledWeek();
     const displaySchedules: IDisplaySchedule[] = [];
 
@@ -172,16 +112,14 @@ export default function ScheduleComponent(): ReactElement {
             const se: ScheduleExercise[] = results[1].data;
             const ex: ExerciseWeights[] = results[2].data;
             const isTodayAfterLastDay: boolean = isTodayAfterLastScheduledDay(s);
+            let scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = getScheduleIdExerciseMap(se, ex);
+            // programId should be the same for all exercises
+            setProgramId(parseInt(s[0].program_id, 10));
 
             if (isTodayAfterLastDay) {
                 daysOfNextScheduledSessions = getNextScheduledWeek(true);
                 console.log("Adding a week: ", daysOfNextScheduledSessions);
             }
-
-            // programId should be the same for all exercises
-            setProgramId(parseInt(s[0].program_id, 10));
-
-            let scheduleIdExerciseMap: Map<string, Map<string, IExerciseInfo[]>> = getScheduleIdExerciseMap(se, ex);
 
             /**
              * Iterate schedules and add exercises corresponding to each scheduleId.
@@ -195,22 +133,21 @@ export default function ScheduleComponent(): ReactElement {
                 if (!isScheduledDayInPast) {
                     const displaySchedule: IDisplaySchedule = {
                         ...schedule,
-                        exercises: scheduleIdExerciseMap.get(schedule.schedule_name)!,
+                        exercises: scheduleIdExerciseMap.get(schedule.schedule_name),
+                        dateHeader: getDateHeader(schedule.day_of_week, daysOfNextScheduledSessions)
                     };
                     displaySchedules.push(displaySchedule);
                 }
             });
             setSchedules(displaySchedules);
             console.info("Loaded data");
-        }).catch(console.error);
-    }
-
-    function getDateHeader(dayOfWeek: number): string {
-        return format(getDateFromDayOfWeek(dayOfWeek), "EEEE, MMM dd");
-    }
-
-    function getDateFromDayOfWeek(dayOfWeek: number): Date {
-        return daysOfNextScheduledSessions[dayOfWeek];
+        }).catch((error) => {
+            toast({
+                title: "Error loading schedule",
+                description: "There was a problem: " + error,
+                action: <ToastAction altText="">OK</ToastAction>,
+            })
+        });
     }
 
     function updateSessionData(scheduleExercise: IExerciseInfo): void {
@@ -265,10 +202,10 @@ export default function ScheduleComponent(): ReactElement {
      */
     function saveSessionData(): AxiosPromise<Session> {
         console.log(`Saving session data: start=${sessionStartTime}, end=${sessionEndTime}, programId=${programId}`);
-        const sessionData: SessionData = {
-            start_timestamp: sessionStartTime,
-            end_timestamp: sessionEndTime,
-            program_id: programId,
+        const sessionData: Session = {
+            start_timestamp: sessionStartTime.toString(),
+            end_timestamp: sessionEndTime.toString(),
+            program_id: programId.toString(),
         };
         return sessionsAPI.sessionsCreate(sessionData);
     }
@@ -287,7 +224,7 @@ export default function ScheduleComponent(): ReactElement {
                                 </h4>
                                 <h4 className="text-lg font-medium">
                                     <FontAwesomeIcon
-                                        icon={faCalendarDay}/>&nbsp; {getDateHeader(schedule.day_of_week)}
+                                        icon={faCalendarDay}/>&nbsp; {schedule.dateHeader}
                                 </h4>
                             </div>
                         </CardTitle>

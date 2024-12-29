@@ -30,16 +30,12 @@ export default function SessionsPage() {
                                 <thead>
                                 <tr>
                                     <th className={"text-left"}>Date</th>
-                                    <th className={"text-left"}>Sets</th>
-                                    <th className={"text-left"}>Repetitions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {sessions && sessions.map((session: Session) => (
                                     <tr key={session.start_timestamp}>
                                         <td>{format(new Date(session.start_timestamp), "MMM dd yyyy")}</td>
-                                        <td>{session.num_sets}</td>
-                                        <td>{session.num_repetitions}</td>
                                     </tr>
                                 ))}
                                 </tbody>
