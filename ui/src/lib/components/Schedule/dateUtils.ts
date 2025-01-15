@@ -60,11 +60,3 @@ export function isTodayAfterLastScheduledDay(schedules: Schedule[]): boolean {
     const lastDayOfSchedule: number = days[days.length - 1];
     return todayNumber > lastDayOfSchedule;
 }
-
-export function getDayNumberDateMap(schedules: Schedule[]): Map<number, string> {
-    const dayNumberDateMap: Map<number, string> = new Map();
-    schedules.forEach((schedule: Schedule) => {
-        dayNumberDateMap.set(schedule.day_of_week, format(getDateFromDayOfWeek(schedule.day_of_week), "EEEE, MMM dd"));
-    });
-    return dayNumberDateMap;
-}

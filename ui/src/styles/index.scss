@@ -1,9 +1,9 @@
+@use "themes/plum";
+@use "themes/verdant";
+@use "themes/fall";
+@use "themes/sky-captain";
+@use "themes/wine";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "themes/plum";
-@import "themes/verdant";
-@import "themes/fall";
-@import "themes/sky-captain";
-@import "themes/wine";

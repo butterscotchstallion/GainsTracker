@@ -50,7 +50,7 @@ export default function ScheduleComponent(): ReactElement {
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
     const sessionDataMap: Map<string, IExerciseInfo> = new Map();
-    const {toast} = useToast()
+    const {toast} = useToast();
 
     /**
      * Each schedule can have different exercises with different weights for each exercise
@@ -150,6 +150,11 @@ export default function ScheduleComponent(): ReactElement {
         });
     }
 
+    /**
+     * - Synchronize workout data
+     * - Set session start time
+     * @param scheduleExercise
+     */
     function updateSessionData(scheduleExercise: IExerciseInfo): void {
         sessionDataMap.set(scheduleExercise.exerciseName, scheduleExercise);
         setExerciseNameDetailsMap(sessionDataMap);
@@ -160,15 +165,28 @@ export default function ScheduleComponent(): ReactElement {
         console.log("Updated session data: ", sessionDataMap.get(scheduleExercise.exerciseName));
     }
 
+    /**
+     * - Synchronize workout data
+     * - Update button color/value
+     * @param scheduleExercise
+     */
+    function onCounterButtonClicked(scheduleExercise: IExerciseInfo): void {
+        updateButton();
+        updateSessionData(scheduleExercise);
+    }
+
+    function updateButton(): void {
+
+    }
+
     function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
         return (
             <ul className="list-none counter-button-list flex justify-between">
                 {[...Array(scheduleExercise.sets).keys()].map((index: number) => (
                     <li key={index}>
-                        <CounterButton onClickCallback={() => updateSessionData(scheduleExercise)}
+                        <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise)}
                                        className="mr-3"
-                                       limit={scheduleExercise.repetitions}
-                                       readOnly={false}/>
+                        />
                     </li>
                 ))}
             </ul>
