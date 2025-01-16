@@ -37,6 +37,9 @@ export default {
                 anchorsHover: 'var(--color-anchors-hover)',
                 logoPlates: 'var(--color-logo-plates)',
                 cardText: 'var(--color-card-text)',
+                counterButtonInactive: 'var(--color-background)',
+                counterButtonActive: 'var(--color-primary)',
+
 
                 main: '#88aaee',
                 mainAccent: '#4d80e6', // not needed for shadcn components

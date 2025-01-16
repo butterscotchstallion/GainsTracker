@@ -9,6 +9,33 @@ type ButtonProps = {
     value: number
 }
 
+export type CounterButtonState = {
+    countValue: number;
+    bgColor: string;
+}
+
+export function getButtonState(currentValue: number, limit: number): CounterButtonState {
+    const inactiveBgColor: string = "bg-[var(--color-background)]";
+    const activeBgColor: string = "bg-[var(--color-primary)]";
+    let countValue = 0;
+    let bgColor = "bg-[var(--color-background)]";
+
+    if (currentValue < limit && currentValue >= 0) {
+        countValue = countValue + 1;
+        bgColor = activeBgColor;
+    }
+
+    if (currentValue === limit) {
+        countValue = 0;
+        bgColor = inactiveBgColor;
+    }
+
+    return {
+        countValue,
+        bgColor
+    }
+}
+
 /**
  * Counter button for incrementing sets
  * - Increment

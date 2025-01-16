@@ -8,7 +8,7 @@ import {AxiosPromise, AxiosResponse} from "axios";
 import {exerciseWeightsAPI, scheduleExercisesAPI, schedulesAPI, sessionsAPI} from "../api/api.ts";
 import {useToast} from "../useToast.ts";
 import {isPast} from "date-fns";
-import CounterButton from "../CounterButton/CounterButton.tsx";
+import CounterButton, {CounterButtonState, getButtonState} from "../CounterButton/CounterButton.tsx";
 import {ToastAction} from "@radix-ui/react-toast";
 
 import "./schedule.scss";
@@ -45,6 +45,8 @@ export default function ScheduleComponent(): ReactElement {
     // Start/end used for session data
     const [sessionStartTime, setSessionStartTime] = useState<Date>();
     const [sessionEndTime, setSessionEndTime] = useState<Date>();
+    // State map of exerciseName -> CounterButtonState
+    const [buttonStateMap, setButtonStateMap] = useState<Map<string, CounterButtonState>>(new Map());
     const [programId, setProgramId] = useState<number>();
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
@@ -162,6 +164,14 @@ export default function ScheduleComponent(): ReactElement {
         if (!sessionStartTime) {
             setSessionEndTime(new Date());
         }
+        const currentValue = 0;
+        const buttonState: Map<string, CounterButtonState> = buttonStateMap;
+        const {countValue, bgColor} = getButtonState(currentValue, scheduleExercise.sets);
+        buttonState.set(scheduleExercise.exerciseName, {
+            countValue,
+            bgColor
+        });
+        setButtonStateMap(buttonState);
         console.log("Updated session data: ", sessionDataMap.get(scheduleExercise.exerciseName));
     }
 
@@ -171,12 +181,7 @@ export default function ScheduleComponent(): ReactElement {
      * @param scheduleExercise
      */
     function onCounterButtonClicked(scheduleExercise: IExerciseInfo): void {
-        updateButton();
         updateSessionData(scheduleExercise);
-    }
-
-    function updateButton(): void {
-
     }
 
     function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
@@ -186,6 +191,8 @@ export default function ScheduleComponent(): ReactElement {
                     <li key={index}>
                         <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise)}
                                        className="mr-3"
+                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor || 'bgCounterButtonInactive'}
+                                       value={buttonStateMap.get(scheduleExercise.exerciseName)?.countValue || 0}
                         />
                     </li>
                 ))}
