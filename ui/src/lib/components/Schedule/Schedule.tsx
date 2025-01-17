@@ -158,20 +158,35 @@ export default function ScheduleComponent(): ReactElement {
      * @param scheduleExercise
      */
     function updateSessionData(scheduleExercise: IExerciseInfo): void {
-        sessionDataMap.set(scheduleExercise.exerciseName, scheduleExercise);
-        setExerciseNameDetailsMap(sessionDataMap);
+        // Set session started/start time
         setIsSessionStarted(true);
         if (!sessionStartTime) {
-            setSessionEndTime(new Date());
+            setSessionStartTime(new Date());
         }
-        const currentValue = 0;
+
+        // Calculate current rep and set
+        const exerciseInfo: IExerciseInfo = sessionDataMap.get(scheduleExercise.exerciseName);
+        const currentRepetition: number = exerciseInfo?.repetitions || 0;
+        const currentSet: number = exerciseInfo?.sets || 0;
         const buttonState: Map<string, CounterButtonState> = buttonStateMap;
-        const {countValue, bgColor} = getButtonState(currentValue, scheduleExercise.sets);
+        const buttonLimit: number = scheduleExercise.sets;
+        const {countValue, bgColor} = getButtonState(currentRepetition, buttonLimit);
         buttonState.set(scheduleExercise.exerciseName, {
             countValue,
             bgColor
         });
         setButtonStateMap(buttonState);
+
+        // Set updated data
+        const updatedExerciseData: IExerciseInfo = {
+            ...scheduleExercise,
+            repetitions: countValue,
+        }
+
+        // Update session data
+        sessionDataMap.set(scheduleExercise.exerciseName, updatedExerciseData);
+        setExerciseNameDetailsMap(sessionDataMap);
+
         console.log("Updated session data: ", sessionDataMap.get(scheduleExercise.exerciseName));
     }
 
