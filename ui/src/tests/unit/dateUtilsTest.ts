@@ -7,7 +7,7 @@ import {
     getNextScheduledWeek,
     isTodayAfterLastScheduledDay,
     isValidDate,
-} from '../lib/components/Schedule/dateUtils.ts';
+} from '../../lib/components/Schedule/dateUtils.ts';
 
 describe('dateUtils', () => {
     describe('getDateHeader', () => {

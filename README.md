@@ -29,3 +29,8 @@ from django.dispatch import Signal
 # This allows users to build custom logic into the request handling
 check_request_enabled = Signal()
 ```
+
+# Running tests
+
+- `npx playwright test`
+- `npx playwright test --ui` - Starts the interactive UI mode.

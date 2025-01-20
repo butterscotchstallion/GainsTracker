@@ -3,7 +3,7 @@ const jestConfig = {
     'transform': {
         '^.+\\.tsx?$': 'babel-jest',
     },
-    testMatch: ['**/tests/**/*.ts'],
+    testMatch: ['**/tests/unit/*.ts'],
 }
 
 module.exports = jestConfig
