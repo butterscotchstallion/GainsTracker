@@ -1,5 +1,9 @@
 import {expect, test} from '@playwright/test';
 
+test('should display the header', async ({page}) =>
+    expect(page.getByTestId("page-header")).toHaveText('Schedule')
+);
+
 test('should not display "No schedules found."', async ({page}) => {
     // Navigate to the URL
     await page.goto('http://localhost:5173/schedule');

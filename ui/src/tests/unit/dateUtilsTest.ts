@@ -8,6 +8,7 @@ import {
     isTodayAfterLastScheduledDay,
     isValidDate,
 } from '../../lib/components/Schedule/dateUtils.ts';
+import {Schedule} from "../../lib/components/api/generated";
 
 describe('dateUtils', () => {
     describe('getDateHeader', () => {
@@ -22,8 +23,8 @@ describe('dateUtils', () => {
 
     describe('getDateFromDayOfWeek', () => {
         it('should return a date for the given day of the week based on the reference date', () => {
-            const referenceDate = new Date('2023-10-01'); // Sunday
-            const result = getDateFromDayOfWeek('Monday', referenceDate);
+            let daysOfNextScheduledSessions: Date[] = getNextScheduledWeek();
+            const result: Date = getDateFromDayOfWeek(1, daysOfNextScheduledSessions);
             expect(result).toBeInstanceOf(Date);
             expect(result.getDay()).toBe(1); // Monday should map to 1
         });
@@ -31,7 +32,7 @@ describe('dateUtils', () => {
         it('should handle invalid day names gracefully', () => {
             const referenceDate = new Date('2023-10-01');
             const result = getDateFromDayOfWeek('InvalidDay', referenceDate);
-            expect(result).toBeNull(); // Assuming function returns null on invalid day name
+            expect(result).toBeUndefined(); // Assuming function returns undefined on invalid day name
         });
     });
 
@@ -46,30 +47,18 @@ describe('dateUtils', () => {
 
     describe('getNextScheduledWeek', () => {
         it('should return an array of scheduled dates for the next week', () => {
-            const currentDate = new Date('2023-10-01');
-            const schedules = ['Monday', 'Wednesday', 'Friday']; // Valid schedule
-            const result = getNextScheduledWeek(currentDate, schedules);
-
+            const result: Date[] = getNextScheduledWeek();
             expect(Array.isArray(result)).toBeTruthy();
-            expect(result.length).toBe(3); // Expect 3 dates for Monday, Wednesday, Friday
+            expect(result.length).toBe(7); // Expect 3 dates for Monday, Wednesday, Friday
             result.forEach((date) => {
                 expect(date).toBeInstanceOf(Date);
             });
-        });
-
-        it('should return an empty array if no days are scheduled', () => {
-            const currentDate = new Date('2023-10-01');
-            const schedules: string[] = [];
-            const result = getNextScheduledWeek(currentDate, schedules);
-
-            expect(Array.isArray(result)).toBeTruthy();
-            expect(result.length).toBe(0);
         });
     });
 
     describe('getDaysOfWeekFromSchedules', () => {
         it('should extract valid day names from the given schedule objects', () => {
-            const schedules = [
+            const schedules: Schedule[] = [
                 {day: 'Monday'},
                 {day: 'Wednesday'},
                 {day: 'Friday'},

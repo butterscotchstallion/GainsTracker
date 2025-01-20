@@ -18,7 +18,7 @@ export default function ProgramsPage() {
 
     return (
         <>
-            <h1 className="gt-header-font gt-header-color">Programs</h1>
+            <h1 data-testid="page-header" className="gt-header-font gt-header-color">Programs</h1>
             {programs.length > 0 ? (
                 <main className="max-w-lg md:max-w-2xl">
                     <Card className="mt-3">

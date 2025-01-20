@@ -32,5 +32,6 @@ check_request_enabled = Signal()
 
 # Running tests
 
-- `npx playwright test`
+- `npm test' - run unit tests
+- `npx playwright test` - run e2e tests
 - `npx playwright test --ui` - Starts the interactive UI mode.
