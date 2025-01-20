@@ -13,6 +13,7 @@ import {defineConfig, devices} from '@playwright/test';
  */
 export default defineConfig({
     testDir: 'src/tests/e2e/',
+    outputDir: 'src/tests/e2e/results/',
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -30,6 +31,11 @@ export default defineConfig({
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
+
+        video: {
+            mode: 'on-first-retry',
+            size: {width: 640, height: 480}
+        }
     },
 
     /* Configure projects for major browsers */

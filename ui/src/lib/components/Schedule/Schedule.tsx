@@ -51,7 +51,7 @@ export default function ScheduleComponent(): ReactElement {
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
     const exerciseWeights$: AxiosPromise<ExerciseWeights[]> = exerciseWeightsAPI.exerciseWeightsList();
-    const sessionDataMap: Map<string, IExerciseInfo> = new Map();
+    const sessionData: Map<string, IExerciseInfo>[] = [];
     const {toast} = useToast();
 
     /**
@@ -156,18 +156,23 @@ export default function ScheduleComponent(): ReactElement {
      * - Synchronize workout data
      * - Set session start time
      * @param scheduleExercise
+     * @param setNumber
      */
-    function updateSessionData(scheduleExercise: IExerciseInfo): void {
+    function updateSessionData(scheduleExercise: IExerciseInfo, setNumber: number): void {
         // Set session started/start time
         setIsSessionStarted(true);
         if (!sessionStartTime) {
             setSessionStartTime(new Date());
         }
 
+        // Initialize current set if necessary
+        if (!sessionData[setNumber]) {
+            sessionData[setNumber] = new Map();
+        }
+
         // Calculate current rep and set
-        const exerciseInfo: IExerciseInfo = sessionDataMap.get(scheduleExercise.exerciseName);
+        const exerciseInfo: IExerciseInfo = sessionData[setNumber].get(scheduleExercise.exerciseName);
         const currentRepetition: number = exerciseInfo?.repetitions || 0;
-        const currentSet: number = exerciseInfo?.sets || 0;
         const buttonState: Map<string, CounterButtonState> = buttonStateMap;
         const buttonLimit: number = scheduleExercise.sets;
         const {countValue, bgColor} = getButtonState(currentRepetition, buttonLimit);
@@ -184,29 +189,30 @@ export default function ScheduleComponent(): ReactElement {
         }
 
         // Update session data
-        sessionDataMap.set(scheduleExercise.exerciseName, updatedExerciseData);
-        setExerciseNameDetailsMap(sessionDataMap);
+        sessionData[setNumber].set(scheduleExercise.exerciseName, updatedExerciseData);
+        setExerciseNameDetailsMap(sessionData[setNumber]);
 
-        console.log("Updated session data: ", sessionDataMap.get(scheduleExercise.exerciseName));
+        console.log("Updated session data: ", sessionData[setNumber].get(scheduleExercise.exerciseName));
     }
 
     /**
      * - Synchronize workout data
      * - Update button color/value
      * @param scheduleExercise
+     * @param setNumber
      */
-    function onCounterButtonClicked(scheduleExercise: IExerciseInfo): void {
-        updateSessionData(scheduleExercise);
+    function onCounterButtonClicked(scheduleExercise: IExerciseInfo, setNumber: number): void {
+        updateSessionData(scheduleExercise, setNumber);
     }
 
     function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
         return (
             <ul className="list-none counter-button-list flex justify-between">
-                {[...Array(scheduleExercise.sets).keys()].map((index: number) => (
-                    <li key={index}>
-                        <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise)}
+                {[...Array(scheduleExercise.sets).keys()].map((setNumber: number) => (
+                    <li key={setNumber}>
+                        <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise, setNumber)}
                                        className="mr-3"
-                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor}
+                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor || 'bg-[var(--color-background)]'}
                                        value={buttonStateMap.get(scheduleExercise.exerciseName)?.countValue || 0}
                         />
                     </li>
