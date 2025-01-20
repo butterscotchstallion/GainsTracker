@@ -60,6 +60,19 @@ export function getDayNumberFromDayName(dayName: string): number {
     return dayNumber;
 }
 
+export function isScheduleDayToday(dayOfWeek: number): boolean {
+    const currentDayName: string = format(new Date(), "EEEE");
+    const dayMap: Map<number, string> = new Map();
+    dayMap.set(0, "Sunday");
+    dayMap.set(1, "Monday");
+    dayMap.set(2, "Tuesday");
+    dayMap.set(3, "Wednesday");
+    dayMap.set(4, "Thursday");
+    dayMap.set(5, "Friday");
+    dayMap.set(6, "Saturday");
+    return currentDayName === dayMap.get(dayOfWeek);
+}
+
 export function isTodayAfterLastScheduledDay(schedules: Schedule[]): boolean {
     const todayNumber: number = getDayNumberFromDayName(format(new Date(), "EEEE"));
     const days: number[] = getDaysOfWeekFromSchedules(schedules);

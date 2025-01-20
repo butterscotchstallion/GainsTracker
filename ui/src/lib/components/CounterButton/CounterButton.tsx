@@ -6,7 +6,8 @@ type ButtonProps = {
     className?: string,
     onClickCallback: MouseEventHandler,
     bgColor: string,
-    value: number
+    value: number,
+    readOnly: boolean
 }
 
 export type CounterButtonState = {
@@ -45,11 +46,13 @@ export default function CounterButton({
                                           bgColor,
                                           className,
                                           value = 0,
-                                          onClickCallback
+                                          onClickCallback,
+                                          readOnly = true
                                       }: ButtonProps): ReactElement {
+    const cursorClass: string = readOnly ? "cursor-default" : "";
     return (
         <button
-            className={cn("counter-button rounded-full text-[var(--color-typography)] p-3", className, bgColor)}
+            className={cn("counter-button rounded-full text-[var(--color-typography)] p-3", className, bgColor, cursorClass)}
             onClick={onClickCallback}>{value}</button>
     );
 }

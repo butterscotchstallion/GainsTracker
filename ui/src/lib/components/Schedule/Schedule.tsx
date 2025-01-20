@@ -12,7 +12,7 @@ import CounterButton, {CounterButtonState, getButtonState} from "../CounterButto
 import {ToastAction} from "@radix-ui/react-toast";
 
 import "./schedule.scss";
-import {getDateHeader, getNextScheduledWeek, isTodayAfterLastScheduledDay} from "./dateUtils.ts";
+import {getDateHeader, getNextScheduledWeek, isScheduleDayToday, isTodayAfterLastScheduledDay} from "./dateUtils.ts";
 
 interface IExerciseInfo {
     sets: number | undefined,
@@ -24,6 +24,7 @@ interface IExerciseInfo {
 interface IDisplaySchedule extends Schedule {
     exercises: IExerciseInfo[],
     dateHeader: string,
+    isToday: boolean,
 }
 
 interface IExerciseInfo {
@@ -136,7 +137,8 @@ export default function ScheduleComponent(): ReactElement {
                     const displaySchedule: IDisplaySchedule = {
                         ...schedule,
                         exercises: scheduleIdExerciseMap.get(schedule.schedule_name),
-                        dateHeader: getDateHeader(schedule.day_of_week, daysOfNextScheduledSessions)
+                        dateHeader: getDateHeader(schedule.day_of_week, daysOfNextScheduledSessions),
+                        isToday: isScheduleDayToday(schedule.day_of_week)
                     };
                     displaySchedules.push(displaySchedule);
                 }
@@ -177,9 +179,13 @@ export default function ScheduleComponent(): ReactElement {
         // Calculate current rep and set
         const exerciseInfo: IExerciseInfo = sessionData[setNumber].get(scheduleExercise.exerciseName);
         const currentRepetition: number = exerciseInfo?.repetitions || 0;
+
+        // TODO: refactor to use session data instead
         const buttonState: Map<string, CounterButtonState>[] = buttonStateMap;
         const buttonLimit: number = scheduleExercise.sets;
-        const {countValue, bgColor} = getButtonState(currentRepetition, buttonLimit);
+        console.log("Current repetition: ", currentRepetition);
+        const {countValue, bgColor} = getButtonState(currentRepetition, buttonLimit, false);
+        console.log("Count value: ", countValue);
         buttonState[setNumber].set(scheduleExercise.exerciseName, {
             countValue,
             bgColor
@@ -190,11 +196,16 @@ export default function ScheduleComponent(): ReactElement {
         const updatedExerciseData: IExerciseInfo = {
             ...scheduleExercise,
             repetitions: countValue,
+            sets: sessionData.length
         }
+
+        console.log("Updated exercise data: ", updatedExerciseData);
 
         // Update session data
         sessionData[setNumber].set(scheduleExercise.exerciseName, updatedExerciseData);
         setExerciseNameDetailsMap(sessionData[setNumber]);
+
+        //console.log("Updated exercise data: ", sessionData[setNumber]);
 
         console.log("Updated session data: ", sessionData[setNumber].get(scheduleExercise.exerciseName));
     }
@@ -209,7 +220,9 @@ export default function ScheduleComponent(): ReactElement {
         updateSessionData(scheduleExercise, setNumber);
     }
 
-    function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
+    function getCounterButtonsForSets(scheduleExercise: IExerciseInfo, isToday: boolean): ReactElement {
+        const inactiveButtonColor: string = 'bg-[var(--color-background)]';
+        // Initialize button state map
         for (let i = 0; i < scheduleExercise.sets; i++) {
             if (!buttonStateMap[i]) {
                 buttonStateMap[i] = new Map();
@@ -219,10 +232,12 @@ export default function ScheduleComponent(): ReactElement {
             <ul className="list-none counter-button-list flex justify-between">
                 {[...Array(scheduleExercise.sets).keys()].map((setNumber: number) => (
                     <li key={setNumber}>
-                        <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise, setNumber)}
-                                       className="mr-3"
-                                       bgColor={buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.bgColor || 'bg-[var(--color-background)]'}
-                                       value={buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.countValue || 0}
+                        <CounterButton
+                            onClickCallback={() => isToday ? onCounterButtonClicked(scheduleExercise, setNumber) : {}}
+                            className="mr-3"
+                            readOnly={!isToday}
+                            bgColor={isToday ? buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.bgColor || inactiveButtonColor : inactiveButtonColor}
+                            value={isToday ? buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.countValue || 0 : 0}
                         />
                     </li>
                 ))}
@@ -304,7 +319,7 @@ export default function ScheduleComponent(): ReactElement {
                                                 <FontAwesomeIcon icon={faGear}/>&nbsp; {exercise.weight}
                                             </td>
                                             <td width="40%" className="pb-4">
-                                                {getCounterButtonsForSets(exercise)}
+                                                {getCounterButtonsForSets(exercise, schedule.isToday)}
                                             </td>
                                         </tr>
                                     ))
@@ -313,7 +328,7 @@ export default function ScheduleComponent(): ReactElement {
                             </table>
                         ) : 'No exercises found.'}
                     </CardContent>
-                    {isSessionStarted ? (
+                    {schedule.isToday && isSessionStarted ? (
                         <>
                             <CardFooter>
                                 <div className="flex items-center justify-between w-full">
