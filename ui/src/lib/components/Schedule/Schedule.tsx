@@ -256,7 +256,7 @@ export default function ScheduleComponent(): ReactElement {
         <>
             {schedules.length === 0 ? 'No schedules found.' : ''}
             {schedules.map((schedule: IDisplaySchedule, index: number) => (
-                <Card key={index} className="mt-3">
+                <Card key={index} className="mt-3" data-testid={'schedule-card-' + index}>
                     <CardHeader>
                         <CardTitle>
                             <div className="flex justify-between">
