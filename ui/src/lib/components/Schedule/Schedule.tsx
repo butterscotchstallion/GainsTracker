@@ -46,7 +46,7 @@ export default function ScheduleComponent(): ReactElement {
     const [sessionStartTime, setSessionStartTime] = useState<Date>();
     const [sessionEndTime, setSessionEndTime] = useState<Date>();
     // State map of exerciseName -> CounterButtonState
-    const [buttonStateMap, setButtonStateMap] = useState<Map<string, CounterButtonState>>(new Map());
+    const [buttonStateMap, setButtonStateMap] = useState<Map<string, CounterButtonState>[]>([]);
     const [programId, setProgramId] = useState<number>();
     const schedules$: AxiosPromise<Schedule[]> = schedulesAPI.schedulesList();
     const scheduleExercises$: AxiosPromise<ScheduleExercise[]> = scheduleExercisesAPI.scheduleExercisesList();
@@ -170,13 +170,17 @@ export default function ScheduleComponent(): ReactElement {
             sessionData[setNumber] = new Map();
         }
 
+        if (!buttonStateMap[setNumber]) {
+            buttonStateMap[setNumber] = new Map();
+        }
+
         // Calculate current rep and set
         const exerciseInfo: IExerciseInfo = sessionData[setNumber].get(scheduleExercise.exerciseName);
         const currentRepetition: number = exerciseInfo?.repetitions || 0;
-        const buttonState: Map<string, CounterButtonState> = buttonStateMap;
+        const buttonState: Map<string, CounterButtonState>[] = buttonStateMap;
         const buttonLimit: number = scheduleExercise.sets;
         const {countValue, bgColor} = getButtonState(currentRepetition, buttonLimit);
-        buttonState.set(scheduleExercise.exerciseName, {
+        buttonState[setNumber].set(scheduleExercise.exerciseName, {
             countValue,
             bgColor
         });
@@ -206,14 +210,19 @@ export default function ScheduleComponent(): ReactElement {
     }
 
     function getCounterButtonsForSets(scheduleExercise: IExerciseInfo): ReactElement {
+        for (let i = 0; i < scheduleExercise.sets; i++) {
+            if (!buttonStateMap[i]) {
+                buttonStateMap[i] = new Map();
+            }
+        }
         return (
             <ul className="list-none counter-button-list flex justify-between">
                 {[...Array(scheduleExercise.sets).keys()].map((setNumber: number) => (
                     <li key={setNumber}>
                         <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise, setNumber)}
                                        className="mr-3"
-                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor || 'bg-[var(--color-background)]'}
-                                       value={buttonStateMap.get(scheduleExercise.exerciseName)?.countValue || 0}
+                                       bgColor={buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.bgColor || 'bg-[var(--color-background)]'}
+                                       value={buttonStateMap[setNumber].get(scheduleExercise.exerciseName)?.countValue || 0}
                         />
                     </li>
                 ))}
