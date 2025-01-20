@@ -1,5 +1,11 @@
-import {addDays, addWeeks, format} from "date-fns";
+import {addDays, addWeeks, format, isValid, parse} from "date-fns";
 import {Schedule} from "../api/generated";
+import {enUS} from 'date-fns/locale';
+
+export function isValidDate(dateString: string): boolean {
+    const parsedDate = parse(dateString, 'P', new Date(), {locale: enUS});
+    return isValid(parsedDate);
+}
 
 export function getDateHeader(dayOfWeek: number, daysOfNextScheduledSessions: Date[]): string {
     return format(getDateFromDayOfWeek(dayOfWeek, daysOfNextScheduledSessions), "EEEE, MMM dd");

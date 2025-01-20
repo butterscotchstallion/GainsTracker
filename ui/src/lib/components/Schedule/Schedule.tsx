@@ -206,7 +206,7 @@ export default function ScheduleComponent(): ReactElement {
                     <li key={index}>
                         <CounterButton onClickCallback={() => onCounterButtonClicked(scheduleExercise)}
                                        className="mr-3"
-                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor || 'bgCounterButtonInactive'}
+                                       bgColor={buttonStateMap.get(scheduleExercise.exerciseName)?.bgColor}
                                        value={buttonStateMap.get(scheduleExercise.exerciseName)?.countValue || 0}
                         />
                     </li>
@@ -254,6 +254,7 @@ export default function ScheduleComponent(): ReactElement {
 
     return (
         <>
+            {schedules.length === 0 ? 'No schedules found.' : ''}
             {schedules.map((schedule: IDisplaySchedule, index: number) => (
                 <Card key={index} className="mt-3">
                     <CardHeader>

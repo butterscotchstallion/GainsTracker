@@ -17,8 +17,8 @@ export type CounterButtonState = {
 export function getButtonState(currentValue: number, limit: number): CounterButtonState {
     const inactiveBgColor: string = "bg-[var(--color-background)]";
     const activeBgColor: string = "bg-[var(--color-primary)]";
-    let countValue = 0;
-    let bgColor = "bg-[var(--color-background)]";
+    let countValue: number = 0;
+    let bgColor: string = inactiveBgColor;
 
     if (currentValue < limit && currentValue >= 0) {
         countValue = countValue + 1;
