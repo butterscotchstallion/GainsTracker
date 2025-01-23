@@ -7,7 +7,7 @@ type ButtonProps = {
     onClickCallback: MouseEventHandler,
     bgColor: string,
     value: number,
-    readOnly: boolean
+    readOnly?: boolean
 }
 
 export type CounterButtonState = {
